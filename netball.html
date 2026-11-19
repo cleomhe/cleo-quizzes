@@ -91,7 +91,8 @@ const VRAE = [
 const KATS = ["The Basics","Positions","Rules","The Court","General"];
 const RONDE = 10;
 const app = document.getElementById("app");
-let rond, idx, punte, t0, gekies;
+let rond, idx, punte, t0, gekies, foute;
+const WEB3FORMS_KEY = "2e1d3de6-f101-4465-bf9f-840e9de848c5"; // each round's score is emailed (the key is not secret)
 
 function lees(){ try{return JSON.parse(localStorage.getItem("netball")||"[]")}catch(e){return[]} }
 function skryf(r){ try{const h=lees();h.unshift(r);localStorage.setItem("netball",JSON.stringify(h.slice(0,10)))}catch(e){} }
@@ -127,7 +128,7 @@ function begin(){
   rond=skud(vars).slice(0,RONDE);
   try{localStorage.setItem("netball_seen",JSON.stringify(gesien.concat(rond.map(v=>v[1]))))}catch(e){}
   rond=rond.map(v=>({kat:v[0],vraag:v[1],opsies:skud(v[2]),regte:v[2][v[3]],wenk:v[4]}));
-  idx=0; punte=0; t0=Date.now(); vraag();
+  idx=0; punte=0; foute=[]; t0=Date.now(); vraag();
 }
 
 function vraag(){
@@ -146,7 +147,7 @@ function kies(i){
   if(gekies) return; gekies=true;
   const v=rond[idx]; const bs=document.querySelectorAll("button.opt");
   const reg = v.opsies[i]===v.regte;
-  if(reg) punte++;
+  if(reg) punte++; else foute.push(v.vraag+" -> he chose: "+v.opsies[i]+" (right: "+v.regte+")");
   bs.forEach((b,j)=>{ b.disabled=true; if(v.opsies[j]===v.regte) b.classList.add("right"); else if(j===i) b.classList.add("wrong"); });
   const fb=document.getElementById("fb");
   fb.innerHTML = (reg ? `<div class="fb g">✔ Correct!</div>` : `<div class="fb b">Not quite. The answer is: ${esc(v.regte)}</div>`)
@@ -162,6 +163,7 @@ function einde(){
   const tyd=Math.floor(sek/60)+" min "+(sek%60)+" sec";
   const d=new Date(); const datum=d.getDate()+"/"+(d.getMonth()+1)+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
   skryf({datum,punte,van:rond.length,tyd});
+  stuur(datum,tyd);
   const p=punte/rond.length;
   const msg = p===1?"Perfect score! Star player!":p>=0.7?"Great job!":p>=0.4?"Good effort, try again!":"Keep practising, it gets easier!";
   app.innerHTML = `
@@ -173,6 +175,15 @@ function einde(){
      <button class="main" onclick="begin2()">Another round</button>
      <button onclick="tuis()">Back to start</button>
    </div>`;
+}
+function stuur(datum,tyd){
+  try{
+    fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},
+      body:JSON.stringify({access_key:WEB3FORMS_KEY,subject:"Tehan Netball Quiz - "+punte+"/"+rond.length+" - "+tyd,
+        from_name:"Tehan's Netball Quiz",Score:punte+" of "+rond.length,Time:tyd,Date:datum,
+        Topics:[...new Set(rond.map(v=>v.kat))].join(", "),
+        Missed:foute.length?foute.join(" | "):"None, all correct!"})}).catch(function(){});
+  }catch(e){}
 }
 function begin2(){ tuis(); begin(); }
 
