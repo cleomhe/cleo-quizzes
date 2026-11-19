@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="af">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ma se Vasvra</title>
+<style>
+  :root{--bg:#fdf6e9;--ink:#2b2b2b;--card:#fff;--accent:#2f6f4e;--good:#2e7d32;--bad:#b3541e;--line:#e0d6c2}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Times New Roman",serif;font-size:24px;line-height:1.4}
+  .wrap{max-width:640px;margin:0 auto;padding:16px}
+  h1{font-size:34px;text-align:center;margin:12px 0 4px}
+  .sub{text-align:center;color:#555;font-size:20px;margin-bottom:18px}
+  .card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px}
+  button{font:inherit;font-size:24px;width:100%;padding:16px;margin:8px 0;border-radius:14px;border:3px solid var(--accent);background:#fff;color:var(--ink);text-align:left;cursor:pointer}
+  button.main{background:var(--accent);color:#fff;text-align:center;font-weight:bold}
+  button.opt:active{background:#eef6f0}
+  button.right{background:#dff3e0;border-color:var(--good)}
+  button.wrong{background:#fbe5d6;border-color:var(--bad)}
+  button:disabled{opacity:1}
+  .cat{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+  .cat label{display:flex;align-items:center;gap:8px;font-size:22px;background:#f4ecd9;padding:10px 14px;border-radius:12px}
+  .cat input{width:26px;height:26px}
+  .top{display:flex;justify-content:space-between;font-size:20px;color:#555;margin-bottom:8px}
+  .q{font-size:28px;font-weight:bold;margin:6px 0 10px}
+  .fb{font-size:26px;margin:12px 0;font-weight:bold}
+  .fb.g{color:var(--good)} .fb.b{color:var(--bad)}
+  .big{font-size:56px;text-align:center;margin:8px 0}
+  .small{font-size:19px;color:#555}
+  table{width:100%;border-collapse:collapse;font-size:20px} td{padding:6px 4px;border-bottom:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ===================================================================
+   VRAE - om nuwe vrae by te voeg, kopieer 'n reël en verander dit:
+   ["Kategorie", "Vraag", ["antwoord 1","antwoord 2","antwoord 3","antwoord 4"], nommer van die regte antwoord (0 = eerste), "Wenk/verduideliking"]
+   Kategorieë: Rekenkunde, Geskiedenis, Aardrykskunde, Algemeen, Spreekwoorde, Natuur, Bybel, Kos en Kook, Woorde, Sport en Musiek
+   (nuwe kategorie? voeg sy naam ook by KATS hieronder)
+   =================================================================== */
+const VRAE = [
+ // ---- Rekenkunde ----
+ ["Rekenkunde","Hoeveel is 25 + 38?",["53","63","73","62"],1,"25 + 38 = 63"],
+ ["Rekenkunde","Hoeveel is 100 − 47?",["63","57","53","47"],2,"100 − 47 = 53"],
+ ["Rekenkunde","Hoeveel is 12 × 5?",["50","55","60","72"],2,"12 × 5 = 60"],
+ ["Rekenkunde","Jy het R200. Jy koop brood vir R35 en melk vir R28. Hoeveel het jy oor?",["R127","R137","R147","R163"],1,"35 + 28 = 63, en 200 − 63 = R137"],
+ ["Rekenkunde","Hoeveel is 144 ÷ 12?",["10","11","12","14"],2,"12 × 12 = 144"],
+ ["Rekenkunde","Wat is die helfte van 90?",["40","45","50","35"],1,"90 ÷ 2 = 45"],
+ ["Rekenkunde","Hoeveel is 8 × 6?",["42","46","48","54"],2,"8 × 6 = 48"],
+ ["Rekenkunde","Hoeveel eiers is twee dosyn?",["12","20","24","36"],2,"'n Dosyn is 12, dus twee dosyn is 24"],
+ ["Rekenkunde","Hoeveel is 10% van R250?",["R10","R20","R25","R50"],2,"10% is 'n tiende: R250 ÷ 10 = R25"],
+ ["Rekenkunde","Hoeveel minute is daar in anderhalf uur?",["60","80","90","100"],2,"60 + 30 = 90 minute"],
+ ["Rekenkunde","Hoeveel is 15 + 15 + 15 + 15?",["45","50","60","75"],2,"4 × 15 = 60"],
+ ["Rekenkunde","Hoeveel is 1000 − 250?",["650","750","850","800"],1,"1000 − 250 = 750"],
+ // ---- Geskiedenis ----
+ ["Geskiedenis","In watter jaar was Suid-Afrika se eerste demokratiese verkiesing?",["1984","1990","1994","2000"],2,"Dit was in 1994"],
+ ["Geskiedenis","Wie was Suid-Afrika se eerste demokraties verkose president?",["F.W. de Klerk","Nelson Mandela","Thabo Mbeki","P.W. Botha"],1,"Nelson Mandela, in 1994"],
+ ["Geskiedenis","In watter jaar het Jan van Riebeeck aan die Kaap geland?",["1488","1652","1795","1820"],1,"Jan van Riebeeck het in 1652 aan die Kaap geland"],
+ ["Geskiedenis","Wie was die eerste mens op die maan?",["Buzz Aldrin","Yuri Gagarin","Neil Armstrong","John Glenn"],2,"Neil Armstrong, in 1969"],
+ ["Geskiedenis","In watter jaar het die Tweede Wêreldoorlog geëindig?",["1918","1939","1945","1960"],2,"Die oorlog het in 1945 geëindig"],
+ ["Geskiedenis","Wanneer is die Unie van Suid-Afrika gestig?",["1852","1902","1910","1961"],2,"In 1910"],
+ ["Geskiedenis","In watter jaar het Suid-Afrika die Rugby Wêreldbeker vir die eerste keer gewen?",["1991","1995","1999","2003"],1,"In 1995, op Ellispark"],
+ ["Geskiedenis","Die Slag van Bloedrivier (16 Desember) was in watter jaar?",["1838","1880","1899","1910"],0,"Dit was in 1838"],
+ ["Geskiedenis","Die Anglo-Boereoorlog het gewoed van 1899 tot ...?",["1900","1902","1905","1910"],1,"Dit het in 1902 geëindig"],
+ ["Geskiedenis","In watter stad staan die Voortrekkermonument?",["Kaapstad","Bloemfontein","Pretoria","Durban"],2,"By Pretoria"],
+ // ---- Aardrykskunde ----
+ ["Aardrykskunde","Watter stad is Suid-Afrika se wetgewende hoofstad (waar die Parlement sit)?",["Pretoria","Kaapstad","Bloemfontein","Johannesburg"],1,"Kaapstad"],
+ ["Aardrykskunde","Hoeveel provinsies het Suid-Afrika?",["7","8","9","11"],2,"Nege provinsies"],
+ ["Aardrykskunde","Watter is die langste rivier in Suid-Afrika?",["Vaalrivier","Oranjerivier","Limpopo","Tugela"],1,"Die Oranjerivier"],
+ ["Aardrykskunde","Wat is die hoogste berg ter wêreld?",["K2","Kilimanjaro","Mount Everest","Tafelberg"],2,"Mount Everest"],
+ ["Aardrykskunde","Hoeveel kontinente is daar?",["5","6","7","9"],2,"Sewe kontinente"],
+ ["Aardrykskunde","Watter oseaan lê aan die ooskus van Suid-Afrika?",["Atlantiese Oseaan","Indiese Oseaan","Stille Oseaan","Noordelike Yssee"],1,"Die Indiese Oseaan"],
+ ["Aardrykskunde","In watter stad staan die Tafelberg?",["Durban","Port Elizabeth","Kaapstad","Pretoria"],2,"In Kaapstad"],
+ // ---- Algemeen ----
+ ["Algemeen","Watter blom is Suid-Afrika se nasionale blom?",["Roos","Protea","Madeliefie","Sonneblom"],1,"Die Koningsprotea"],
+ ["Algemeen","Watter dier is Suid-Afrika se nasionale dier?",["Leeu","Olifant","Springbok","Kameelperd"],2,"Die Springbok"],
+ ["Algemeen","Watter kleur is NIE in die Suid-Afrikaanse vlag nie?",["Groen","Geel","Pienk","Blou"],2,"Daar is geen pienk in die vlag nie"],
+ ["Algemeen","In watter maand is Kersfees?",["November","Desember","Januarie","Oktober"],1,"25 Desember"],
+ ["Algemeen","Hoeveel dae het 'n skrikkeljaar?",["365","366","364","360"],1,"366 dae (Februarie het 29 dae)"],
+ ["Algemeen","Wie het die ark gebou?",["Moses","Abraham","Noag","Dawid"],2,"Noag"],
+ ["Algemeen","Wie was die sterkste man in die Bybel?",["Simson","Dawid","Josef","Elia"],0,"Simson"],
+ ["Algemeen","Watter sport speel die Springbokke?",["Krieket","Rugby","Gholf","Tennis"],1,"Rugby (die krieketspan is die Proteas)"],
+ // ---- Spreekwoorde ----
+ ["Spreekwoorde","Maak klaar: 'Die appel val nie ver van die ... nie.'",["boom","huis","grond","mark"],0,"Die appel val nie ver van die boom nie"],
+ ["Spreekwoorde","Maak klaar: 'Môre is nog 'n ...'",["week","dag","jaar","rede"],1,"Môre is nog 'n dag"],
+ ["Spreekwoorde","Maak klaar: 'Haastige spoed is selde ...'",["vinnig","goed","lank","nodig"],1,"Haastige spoed is selde goed"],
+ ["Spreekwoorde","Maak klaar: 'Oefening maak ...'",["pyn","moeg","meester","vrede"],2,"Oefening maak meester"],
+ ["Spreekwoorde","Maak klaar: 'Moenie al jou eiers in een ... sit nie.'",["mandjie","kamer","hand","sak"],0,"Moenie al jou eiers in een mandjie sit nie"],
+ ["Spreekwoorde","Maak klaar: 'Wie nie waag nie, ... nie.'",["verloor","wen","slaag","leer"],1,"Wie nie waag nie, wen nie"],
+ ["Spreekwoorde","Maak klaar: 'Twee ... is beter as een.'",["koppe","mense","hande","maats"],0,"Twee koppe is beter as een"],
+ // ---- Natuur ----
+ ["Natuur","Hoeveel pote het 'n spinnekop?",["6","8","10","12"],1,"Agt pote"],
+ ["Natuur","By hoeveel grade Celsius kook water?",["50","80","100","120"],2,"Water kook by 100 grade Celsius"],
+ ["Natuur","Van watter dier kry ons wol?",["Koei","Skaap","Hoender","Vark"],1,"Van die skaap"],
+ ["Natuur","Watter planeet is die naaste aan die son?",["Aarde","Mars","Mercurius","Venus"],2,"Mercurius"],
+ ["Natuur","Watter is die grootste dier wat op land loop?",["Renoster","Olifant","Kameelperd","Seekoei"],1,"Die olifant"],
+ ["Natuur","Watter vrug is geel en gebuig?",["Piesang","Appel","Druif","Lemoen"],0,"Die piesang"],
+ ["Natuur","Hoeveel dae het Februarie in 'n gewone jaar?",["28","29","30","31"],0,"28 dae (29 in 'n skrikkeljaar)"],
+ // ---- Rekenkunde (meer) ----
+ ["Rekenkunde","Hoeveel is 7 × 8?",["54","56","58","64"],1,"7 × 8 = 56"],
+ ["Rekenkunde","Hoeveel is 250 + 175?",["415","425","435","525"],1,"250 + 175 = 425"],
+ ["Rekenkunde","Hoeveel is 90 − 38?",["52","58","62","48"],0,"90 − 38 = 52"],
+ ["Rekenkunde","Hoeveel is 'n kwart van 100?",["20","25","30","50"],1,"100 ÷ 4 = 25"],
+ ["Rekenkunde","Hoeveel is 9 × 9?",["72","81","90","99"],1,"9 × 9 = 81"],
+ ["Rekenkunde","Vleis kos R50 per kilogram. Hoeveel kos 3 kilogram?",["R100","R120","R150","R200"],2,"3 × R50 = R150"],
+ ["Rekenkunde","Jy het R500 en spandeer R320. Hoeveel het jy oor?",["R120","R170","R180","R280"],2,"500 − 320 = R180"],
+ ["Rekenkunde","Hoeveel is 6 × 7?",["36","42","48","49"],1,"6 × 7 = 42"],
+ ["Rekenkunde","Hoeveel is 20% van R100?",["R2","R10","R20","R25"],2,"20% van 100 is R20"],
+ ["Rekenkunde","Hoeveel minute is daar in 3 uur?",["120","150","180","240"],2,"3 × 60 = 180 minute"],
+ ["Rekenkunde","Hoeveel is 36 ÷ 6?",["5","6","7","8"],1,"6 × 6 = 36"],
+ ["Rekenkunde","Hoeveel is 49 + 51?",["90","100","110","99"],1,"49 + 51 = 100"],
+ ["Rekenkunde","Wat is die helfte van 250?",["100","115","125","150"],2,"250 ÷ 2 = 125"],
+ ["Rekenkunde","Hoeveel sent is daar in R5?",["50","100","500","5000"],2,"R1 = 100 sent, dus R5 = 500 sent"],
+ ["Rekenkunde","Hoeveel is 11 × 11?",["111","121","110","132"],1,"11 × 11 = 121"],
+ ["Rekenkunde","Jy koop 4 pakkies koffie teen R45 elk. Hoeveel betaal jy?",["R160","R170","R180","R200"],2,"4 × R45 = R180"],
+ ["Rekenkunde","Watter getal kom volgende? 2, 4, 6, 8, ...",["9","10","12","14"],1,"Elke keer 2 meer: 10"],
+ ["Rekenkunde","Watter getal kom volgende? 2, 5, 8, 11, ...",["13","14","15","16"],1,"Elke keer 3 meer: 14"],
+ // ---- Geskiedenis (meer) ----
+ ["Geskiedenis","In watter jaar het die Eerste Wêreldoorlog begin?",["1904","1914","1918","1939"],1,"In 1914"],
+ ["Geskiedenis","Wie was die president van Suid-Afrika voor Nelson Mandela?",["P.W. Botha","F.W. de Klerk","Thabo Mbeki","Jacob Zuma"],1,"F.W. de Klerk"],
+ ["Geskiedenis","In watter jaar is Nelson Mandela uit die tronk vrygelaat?",["1980","1985","1990","1994"],2,"Op 11 Februarie 1990"],
+ ["Geskiedenis","Wie het saam met Mandela in 1993 die Nobel Vredesprys gewen?",["F.W. de Klerk","Desmond Tutu","Steve Biko","P.W. Botha"],0,"F.W. de Klerk"],
+ ["Geskiedenis","In watter jaar het die skip Titanic gesink?",["1892","1912","1925","1939"],1,"In 1912"],
+ ["Geskiedenis","In watter jaar het die Berlynse Muur geval?",["1979","1985","1989","1995"],2,"In 1989"],
+ ["Geskiedenis","In watter jaar het Suid-Afrika 'n republiek geword?",["1910","1948","1961","1994"],2,"In 1961"],
+ ["Geskiedenis","Wie het die eerste hartoorplanting in Kaapstad gedoen (1967)?",["Dr. Chris Barnard","Dr. Albert Hofmann","Dr. Jan Smuts","Dr. Hendrik Verwoerd"],0,"Dr. Chris Barnard, by die Groote Schuur-hospitaal"],
+ ["Geskiedenis","Wie het die gloeilamp uitgevind?",["Thomas Edison","Albert Einstein","Isaac Newton","Alexander Bell"],0,"Thomas Edison"],
+ ["Geskiedenis","Wie het in 1488 om die suidpunt van Afrika geseil?",["Vasco da Gama","Bartolomeu Dias","Christoffel Columbus","Jan van Riebeeck"],1,"Bartolomeu Dias"],
+ ["Geskiedenis","In watter jaar het die Groot Trek begin?",["1806","1836","1860","1899"],1,"Omstreeks 1836"],
+ ["Geskiedenis","In watter dorp staan die Afrikaanse Taalmonument?",["Stellenbosch","Paarl","Wellington","Bloemfontein"],1,"By Paarl"],
+ ["Geskiedenis","In watter jaar het die Tweede Wêreldoorlog begin?",["1914","1929","1939","1945"],2,"In 1939"],
+ ["Geskiedenis","Hoeveel jaar het Koningin Elizabeth II as koningin regeer?",["40","55","70","85"],2,"Omtrent 70 jaar (1952–2022)"],
+ // ---- Aardrykskunde (meer) ----
+ ["Aardrykskunde","Wat is die hoofstad van Frankryk?",["Londen","Parys","Rome","Madrid"],1,"Parys"],
+ ["Aardrykskunde","Wat is die hoofstad van Engeland?",["Londen","Dublin","Berlyn","Wene"],0,"Londen"],
+ ["Aardrykskunde","Watter is die grootste oseaan?",["Atlantiese Oseaan","Indiese Oseaan","Stille Oseaan","Arktiese Oseaan"],2,"Die Stille Oseaan"],
+ ["Aardrykskunde","Tussen watter twee lande lê die Victoria-waterval?",["SA en Namibië","Zambië en Zimbabwe","Botswana en Angola","Kenia en Tanzanië"],1,"Zambië en Zimbabwe"],
+ ["Aardrykskunde","In watter provinsie lê Bloemfontein?",["Vrystaat","Gauteng","Noord-Kaap","Wes-Kaap"],0,"In die Vrystaat"],
+ ["Aardrykskunde","Watter is die grootste woestyn in Afrika?",["Kalahari","Namib","Sahara","Karoo"],2,"Die Sahara"],
+ ["Aardrykskunde","Watter land lê binne Suid-Afrika, heeltemal omring daardeur?",["Swaziland","Lesotho","Botswana","Namibië"],1,"Lesotho"],
+ ["Aardrykskunde","Wat is die hoofstad van Namibië?",["Windhoek","Maputo","Harare","Gaborone"],0,"Windhoek"],
+ ["Aardrykskunde","Op watter eiland was Nelson Mandela jare lank in die tronk?",["Robbeneiland","Madagaskar","Mauritius","Bouvet"],0,"Robbeneiland, naby Kaapstad"],
+ ["Aardrykskunde","In watter provinsie lê Pretoria en Johannesburg?",["Gauteng","Limpopo","KwaZulu-Natal","Mpumalanga"],0,"Gauteng"],
+ ["Aardrykskunde","Wat is die suidelikste punt van Afrika?",["Kaappunt","Kaap Agulhas","Kaap Hangklip","Kaap Columbine"],1,"Kaap Agulhas (nie Kaappunt nie)"],
+ ["Aardrykskunde","In watter land staan die piramides van Gizeh?",["Egipte","Kenia","Marokko","Libië"],0,"Egipte"],
+ ["Aardrykskunde","In watter stad is die Groot Gat, die beroemde diamantmyn?",["Kimberley","Pretoria","Welkom","Durban"],0,"Kimberley"],
+ // ---- Algemeen (meer) ----
+ ["Algemeen","Hoeveel kleure het 'n reënboog?",["5","6","7","8"],2,"Sewe kleure"],
+ ["Algemeen","Watter kleur kry jy as jy blou en geel meng?",["Pers","Groen","Oranje","Bruin"],1,"Groen"],
+ ["Algemeen","Hoeveel spelers is daar in 'n rugbyspan op die veld?",["11","13","15","18"],2,"15 spelers"],
+ ["Algemeen","Hoeveel spelers is daar in 'n sokkerspan op die veld?",["9","11","13","15"],1,"11 spelers"],
+ ["Algemeen","'n Groep leeus word 'n ... genoem.",["trop","swerm","kudde","skool"],0,"'n Trop leeus"],
+ ["Algemeen","Hoeveel letters is daar in die alfabet?",["24","25","26","28"],2,"26 letters"],
+ ["Algemeen","Hoeveel snare het 'n gewone kitaar?",["4","5","6","8"],2,"Ses snare"],
+ ["Algemeen","Watter taal praat hulle in Brasilië?",["Spaans","Portugees","Engels","Frans"],1,"Portugees"],
+ ["Algemeen","Watter metaal is vloeibaar by kamertemperatuur?",["Yster","Koper","Kwik","Goud"],2,"Kwik"],
+ ["Algemeen","Watter dag kom ná Vrydag?",["Donderdag","Saterdag","Sondag","Maandag"],1,"Saterdag"],
+ ["Algemeen","Hoeveel maande het 'n jaar?",["10","11","12","13"],2,"Twaalf maande"],
+ ["Algemeen","Hoeveel sent is een rand?",["10","50","100","1000"],2,"100 sent"],
+ // ---- Spreekwoorde (meer) ----
+ ["Spreekwoorde","Maak klaar: 'Goedkoop is ...'",["duurkoop","lekker","min","goed"],0,"Goedkoop is duurkoop"],
+ ["Spreekwoorde","Maak klaar: 'Elke hond kry sy ...'",["been","dag","kos","kans"],1,"Elke hond kry sy dag"],
+ ["Spreekwoorde","Maak klaar: 'Wat jy saai, sal jy ...'",["maai","eet","sien","kry"],0,"Wat jy saai, sal jy maai"],
+ ["Spreekwoorde","Maak klaar: 'Kyk voor jy ...'",["loop","spring","praat","koop"],1,"Kyk voor jy spring"],
+ ["Spreekwoorde","Maak klaar: 'Liefde is ...'",["blind","soet","groot","lank"],0,"Liefde is blind"],
+ ["Spreekwoorde","Maak klaar: 'Die einde bekroon die ...'",["dag","werk","pad","spel"],1,"Die einde bekroon die werk"],
+ ["Spreekwoorde","Maak klaar: 'Jy kan nie 'n ou hond nuwe ... leer nie.'",["foefies","liedjies","name","paaie"],0,"'n Ou hond nuwe foefies leer"],
+ ["Spreekwoorde","Maak klaar: 'Geduld is 'n ...'",["deug","gawe","las","werk"],0,"Geduld is 'n deug"],
+ ["Spreekwoorde","Maak klaar: 'Tyd is ...'",["kosbaar","geld","kort","min"],1,"Tyd is geld"],
+ ["Spreekwoorde","Maak klaar: 'Moenie die ... voor die osse span nie.'",["wa","boer","ploeg","perde"],0,"Moenie die wa voor die osse span nie"],
+ ["Spreekwoorde","Maak klaar: 'Beter laat as ...'",["nooit","nou","môre","vroeg"],0,"Beter laat as nooit"],
+ ["Spreekwoorde","Maak klaar: 'Stille waters het ... gronde.'",["diep","min","hoë","droë"],0,"Stille waters het diep gronde"],
+ ["Spreekwoorde","Maak klaar: 'Eendrag maak ...'",["mag","geld","vriende","werk"],0,"Eendrag maak mag"],
+ // ---- Natuur (meer) ----
+ ["Natuur","Hoeveel pote het 'n insek?",["4","6","8","10"],1,"Ses pote"],
+ ["Natuur","Watter gas het ons nodig om asem te haal?",["Koolsuur","Suurstof","Stikstof","Waterstof"],1,"Suurstof"],
+ ["Natuur","Watter is die vinnigste landdier?",["Leeu","Perd","Jagluiperd","Wildebees"],2,"Die jagluiperd"],
+ ["Natuur","Watter voël kan nie vlieg nie?",["Arend","Volstruis","Duif","Swaeltjie"],1,"Die volstruis"],
+ ["Natuur","'n Baba-koei word 'n ... genoem.",["lam","kalf","bokkie","vul"],1,"'n Kalf"],
+ ["Natuur","Watter orgaan pomp bloed deur jou liggaam?",["Longe","Maag","Hart","Lewer"],2,"Die hart"],
+ ["Natuur","Wat het plante nodig om te groei?",["Water en sonlig","Net skaduwee","Net sand","Wind en koue"],0,"Water en sonlig"],
+ ["Natuur","In watter seisoen val die blare van baie bome af?",["Lente","Somer","Herfs","Winter"],2,"In die herfs"],
+ ["Natuur","Wat maak bye?",["Heuning","Melk","Stroop","Botter"],0,"Heuning"],
+ ["Natuur","In watter windrigting kom die son op?",["Ooste","Weste","Noorde","Suide"],0,"In die ooste"],
+ ["Natuur","Watter is die grootste dier ter wêreld?",["Olifant","Haai","Blouwalvis","Seekoei"],2,"Die blouwalvis"],
+ ["Natuur","Watter dier kan sy kleur verander?",["Verkleurmannetjie","Slang","Padda","Skilpad"],0,"Die verkleurmannetjie"],
+ ["Natuur","'n Vlinder begin sy lewe as 'n ...",["eier en ruspe","slang","vis","voël"],0,"Eers 'n eier, dan 'n ruspe"],
+ ["Natuur","Watter is die koudste seisoen?",["Lente","Somer","Herfs","Winter"],3,"Winter"],
+ ["Natuur","'n Baba-skaap word 'n ... genoem.",["kalf","lam","vul","bokkie"],1,"'n Lam"],
+ ["Natuur","Watter lid van die kattefamilie het 'n maanhaar?",["Luiperd","Leeu","Jagluiperd","Tier"],1,"Die leeu (mannetjie)"],
+ ["Natuur","Watter dier bou 'n dam in 'n rivier?",["Bever","Otter","Haas","Muis"],0,"Die bever"],
+ // ---- Bybel ----
+ ["Bybel","Wie is deur 'n groot vis ingesluk?",["Jona","Petrus","Paulus","Moses"],0,"Jona"],
+ ["Bybel","Hoeveel dissipels het Jesus gehad?",["7","10","12","14"],2,"Twaalf"],
+ ["Bybel","In watter dorp is Jesus gebore?",["Nasaret","Betlehem","Jerusalem","Kapernaum"],1,"Betlehem"],
+ ["Bybel","Wie het Goliat verslaan?",["Simson","Saul","Dawid","Josua"],2,"Dawid, met 'n slingervel"],
+ ["Bybel","Wie was die eerste man?",["Adam","Kain","Noag","Abraham"],0,"Adam"],
+ ["Bybel","Wie was die eerste vrou?",["Eva","Sara","Maria","Rut"],0,"Eva"],
+ ["Bybel","Wat is die eerste boek van die Bybel?",["Eksodus","Genesis","Psalms","Matteus"],1,"Genesis"],
+ ["Bybel","Wie het die volk Israel deur die Rooi See gelei?",["Moses","Abraham","Josua","Elia"],0,"Moses"],
+ ["Bybel","Hoeveel dae en nagte het dit gereën in Noag se tyd?",["7","12","40","100"],2,"Veertig dae en nagte"],
+ ["Bybel","Wie het Jesus verraai?",["Petrus","Judas","Johannes","Tomas"],1,"Judas"],
+ ["Bybel","Wie is Jesus se moeder?",["Marta","Maria","Eva","Elisabet"],1,"Maria"],
+ ["Bybel","Wie het in die leeukuil beland?",["Daniël","Josef","Jona","Elia"],0,"Daniël"],
+ ["Bybel","Wie was die wyste koning in die Bybel?",["Saul","Dawid","Salomo","Herodes"],2,"Salomo"],
+ ["Bybel","Op watter berg het Moses die Tien Gebooie ontvang?",["Sinai","Karmel","Olyfberg","Ararat"],0,"Die berg Sinai"],
+ ["Bybel","Wie het Jesus gedoop?",["Petrus","Johannes die Doper","Paulus","Lukas"],1,"Johannes die Doper"],
+ ["Bybel","Hoeveel boeke is daar in die Nuwe Testament?",["12","27","39","66"],1,"Sewe-en-twintig"],
+ ["Bybel","Wat is die laaste boek van die Bybel?",["Openbaring","Judas","Handelinge","Genesis"],0,"Openbaring"],
+ ["Bybel","Wie se broers het hom as slaaf verkoop?",["Josef","Benjamin","Dawid","Esau"],0,"Josef"],
+ // ---- Kos en Kook ----
+ ["Kos en Kook","Waarvan word brood hoofsaaklik gebak?",["Meel","Suiker","Rys","Sout"],0,"Meel"],
+ ["Kos en Kook","Wat is biltong?",["Gedroogde vleis","Gerookte vis","'n Soort kaas","'n Soort brood"],0,"Gedroogde, gekruide vleis"],
+ ["Kos en Kook","Watter soet lekkerny word in stroop gedoop?",["Koeksister","Beskuit","Pannekoek","Tert"],0,"Die koeksister"],
+ ["Kos en Kook","Watter tradisionele Suid-Afrikaanse gereg word van gekruide maalvleis met 'n eiervulsel gemaak?",["Bobotie","Potjiekos","Bredie","Sosaties"],0,"Bobotie"],
+ ["Kos en Kook","Pap word gemaak van ...",["mieliemeel","koringmeel","rys","aartappels"],0,"Mieliemeel"],
+ ["Kos en Kook","Wat strooi mens gewoonlik op melktert?",["Kaneel","Peper","Sout","Neutmuskaat"],0,"Kaneel"],
+ ["Kos en Kook","Van watter vrug word appelkooskonfyt gemaak?",["Appelkoos","Perske","Pruim","Vy"],0,"Appelkoos"],
+ ["Kos en Kook","Hoeveel teelepels is daar in een eetlepel?",["2","3","5","6"],1,"Drie teelepels"],
+ ["Kos en Kook","Waaruit word wyn gemaak?",["Druiwe","Appels","Piesangs","Lemoene"],0,"Druiwe"],
+ ["Kos en Kook","Uit watter deel van Suid-Afrika kom rooibostee?",["Sederberge, Wes-Kaap","KwaZulu-Natal","Vrystaat","Limpopo"],0,"Die Sederberge in die Wes-Kaap"],
+ ["Kos en Kook","Waarvan word kaas gemaak?",["Melk","Eiers","Meel","Water"],0,"Melk"],
+ ["Kos en Kook","Waarin word potjiekos gaargemaak?",["Driepoot-potjie","Oond","Mikrogolf","Braaipan"],0,"In 'n driepoot-potjie oor die vuur"],
+ ["Kos en Kook","Waarin word vetkoek gebak?",["Warm olie","Water","Die oond","Die son"],0,"In warm olie"],
+ ["Kos en Kook","Wat is 'n sosatie?",["Vleis op 'n stokkie","'n Soort sop","'n Soort brood","'n Soort pap"],0,"Gekruide vleis op 'n stokkie"],
+ // ---- Woorde ----
+ ["Woorde","Wat is die teenoorgestelde van 'vrolik'?",["Treurig","Bly","Lekker","Vinnig"],0,"Treurig"],
+ ["Woorde","Wat is die teenoorgestelde van 'oud'?",["Jonk","Siek","Sterk","Swaar"],0,"Jonk"],
+ ["Woorde","Wat is die teenoorgestelde van 'dik'?",["Lank","Dun","Kort","Groot"],1,"Dun"],
+ ["Woorde","Wat is die teenoorgestelde van 'veilig'?",["Gevaarlik","Seker","Stil","Warm"],0,"Gevaarlik"],
+ ["Woorde","Wat is die teenoorgestelde van 'rykdom'?",["Armoede","Gesondheid","Geluk","Mag"],0,"Armoede"],
+ ["Woorde","Wat is die teenoorgestelde van 'sterk'?",["Swak","Lank","Stil","Koud"],0,"Swak"],
+ ["Woorde","Wat is die teenoorgestelde van 'vinnig'?",["Stadig","Sag","Hard","Dun"],0,"Stadig"],
+ ["Woorde","Wat is die teenoorgestelde van 'swaar'?",["Lig","Hoog","Warm","Nat"],0,"Lig"],
+ ["Woorde","Wat is die teenoorgestelde van 'waar'?",["Vals","Reg","Mooi","Swaar"],0,"Vals (onwaar)"],
+ ["Woorde","Wat beteken 'kaalvoet'?",["Sonder skoene","Sonder klere","Baie vinnig","Baie koud"],0,"Sonder skoene"],
+ ["Woorde","Wat is die meervoud van 'kind'?",["Kinders","Kinde","Kindere","Kindens"],0,"Kinders"],
+ ["Woorde","Wat is die meervoud van 'boek'?",["Boeke","Boekers","Boekens","Boeks"],0,"Boeke"],
+ ["Woorde","Wat is die verkleinwoord van 'huis'?",["Huisie","Huisje","Huisetjie","Huiske"],0,"Huisie"],
+ ["Woorde","Wat is die verkleinwoord van 'hond'?",["Hondjie","Hondie","Hondetjie","Hondtjie"],0,"Hondjie"],
+ ["Woorde","Watter woord is reg gespel?",["Ontvang","Ontfang","Ontwang","Ontvanck"],0,"Ontvang"],
+ ["Woorde","Watter woord beteken amper dieselfde as 'gelukkig'?",["Bly","Moeg","Kwaad","Honger"],0,"Bly"],
+ ["Woorde","Watter woord beteken amper dieselfde as 'moeg'?",["Vermoeid","Vinnig","Fluks","Sterk"],0,"Vermoeid"],
+ // ---- Sport en Musiek ----
+ ["Sport en Musiek","Hoeveel spelers is daar in 'n krieketspan?",["9","11","13","15"],1,"Elf spelers"],
+ ["Sport en Musiek","Watter land het die sokker-Wêreldbeker in 2010 aangebied?",["Brasilië","Suid-Afrika","Duitsland","Frankryk"],1,"Suid-Afrika"],
+ ["Sport en Musiek","Wie was die Springbok-kaptein toe ons in 1995 die Wêreldbeker gewen het?",["François Pienaar","Os du Randt","Joost van der Westhuizen","Siya Kolisi"],0,"François Pienaar"],
+ ["Sport en Musiek","Watter kleur trui dra die Springbokke?",["Groen","Blou","Rooi","Swart"],0,"Groen met goud"],
+ ["Sport en Musiek","Wimbledon is 'n beroemde toernooi in watter sport?",["Tennis","Gholf","Krieket","Rugby"],0,"Tennis"],
+ ["Sport en Musiek","Hoeveel ringe is daar in die Olimpiese vlag?",["3","4","5","6"],2,"Vyf ringe"],
+ ["Sport en Musiek","Wie het die woorde van 'Die Stem van Suid-Afrika' geskryf?",["C.J. Langenhoven","N.P. van Wyk Louw","Eugène Marais","C. Louis Leipoldt"],0,"C.J. Langenhoven"],
+ ["Sport en Musiek","Watter instrument het swart en wit toetse?",["Klavier","Viool","Kitaar","Fluit"],0,"Die klavier"],
+ ["Sport en Musiek","Hoeveel lede is daar in 'n kwartet?",["2","3","4","5"],2,"Vier"],
+ ["Sport en Musiek","Hoeveel snare het 'n viool?",["3","4","5","6"],1,"Vier snare"],
+ ["Sport en Musiek","Die Comrades-marathon word tussen Durban en watter stad gehardloop?",["Pietermaritzburg","Johannesburg","Bloemfontein","Pretoria"],0,"Pietermaritzburg"],
+ ["Sport en Musiek","Hoeveel punte is 'n drie (try) in rugby werd?",["3","4","5","7"],2,"Vyf punte"],
+ ["Sport en Musiek","Wie het in 1995 die drop-doel in die Wêreldbeker-eindstryd geskop?",["Joel Stransky","Handré Pollard","Naas Botha","Morné du Plessis"],0,"Joel Stransky"],
+ ["Sport en Musiek","Hoeveel note is daar in 'n oktaaf?",["6","7","8","10"],2,"Agt"]
+];
+/* ================================================================== */
+
+const KATS = ["Rekenkunde","Geskiedenis","Aardrykskunde","Algemeen","Spreekwoorde","Natuur","Bybel","Kos en Kook","Woorde","Sport en Musiek"];
+const WEB3FORMS_KEY = "2e1d3de6-f101-4465-bf9f-840e9de848c5"; // stuur elke rondte se punte per e-pos (die sleutel is nie geheim nie)
+const RONDE = 10;
+const app = document.getElementById("app");
+let rond, idx, punte, t0, gekies, foute;
+
+function lees(){ try{return JSON.parse(localStorage.getItem("vasvra")||"[]")}catch(e){return[]} }
+function skryf(r){ try{const h=lees();h.unshift(r);localStorage.setItem("vasvra",JSON.stringify(h.slice(0,10)))}catch(e){} }
+function skud(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+
+function tuis(){
+  const h = lees();
+  let geskiedenis = "";
+  if(h.length){
+    geskiedenis = '<div class="card"><b>Jou vorige rondtes</b><table>' +
+      h.slice(0,5).map(r=>`<tr><td>${esc(r.datum)}</td><td>${r.punte} van ${r.van}</td><td>${r.tyd}</td></tr>`).join("") +
+      '</table></div>';
+  }
+  app.innerHTML = `
+   <h1>Ma se Vasvra</h1>
+   <div class="sub">Neem jou tyd, daar is geen haas nie 😊</div>
+   <div class="card">
+     <b>Waaroor wil jy vrae hê?</b>
+     <div class="cat">${KATS.map(k=>`<label><input type="checkbox" value="${k}" checked> ${k}</label>`).join("")}</div>
+     <button class="main" onclick="begin()">Begin! (${RONDE} vrae)</button>
+   </div>${geskiedenis}
+   <div class="small" style="text-align:center">${VRAE.length} vrae in totaal</div>`;
+}
+
+function begin(){
+  const gekiesK=[...document.querySelectorAll(".cat input:checked")].map(i=>i.value);
+  let poel=VRAE.filter(v=>gekiesK.includes(v[0]));
+  if(!poel.length) poel=VRAE;
+  let gesien=[]; try{gesien=JSON.parse(localStorage.getItem("vasvra_gesien")||"[]")}catch(e){}
+  let vars=poel.filter(v=>!gesien.includes(v[1]));
+  if(vars.length<RONDE){ gesien=gesien.filter(g=>!poel.some(v=>v[1]===g)); vars=poel; } // alles gesien: begin weer van voor af
+  rond=skud(vars).slice(0,RONDE);
+  try{localStorage.setItem("vasvra_gesien",JSON.stringify(gesien.concat(rond.map(v=>v[1]))))}catch(e){}
+  rond=rond.map(v=>{
+    const regte=v[2][v[3]]; const opsies=skud(v[2]);
+    return {kat:v[0],vraag:v[1],opsies,regte,wenk:v[4]};
+  });
+  idx=0; punte=0; foute=[]; t0=Date.now(); vraag();
+}
+
+function vraag(){
+  gekies=false;
+  const v=rond[idx];
+  app.innerHTML = `
+   <div class="top"><span>Vraag ${idx+1} van ${rond.length}</span><span>${esc(v.kat)}</span></div>
+   <div class="card">
+     <div class="q">${esc(v.vraag)}</div>
+     ${v.opsies.map((o,i)=>`<button class="opt" onclick="kies(${i})">${esc(o)}</button>`).join("")}
+     <div id="fb"></div>
+   </div>`;
+}
+
+function kies(i){
+  if(gekies) return; gekies=true;
+  const v=rond[idx]; const knoppies=document.querySelectorAll("button.opt");
+  const reg = v.opsies[i]===v.regte;
+  if(reg) punte++; else foute.push(v.vraag+" -> sy het gekies: "+v.opsies[i]+" (reg: "+v.regte+")");
+  knoppies.forEach((b,j)=>{ b.disabled=true; if(v.opsies[j]===v.regte) b.classList.add("right"); else if(j===i) b.classList.add("wrong"); });
+  const fb=document.getElementById("fb");
+  fb.innerHTML = (reg
+     ? `<div class="fb g">✔ Reg! Mooi so!</div>`
+     : `<div class="fb b">Amper! Die regte antwoord is: ${esc(v.regte)}</div>`)
+     + `<div class="small">${esc(v.wenk||"")}</div>`
+     + `<button class="main" onclick="volgende()">${idx+1<rond.length?"Volgende vraag":"Sien my punte"}</button>`;
+  fb.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+function volgende(){ idx++; if(idx<rond.length) vraag(); else einde(); }
+
+function einde(){
+  const sek=Math.round((Date.now()-t0)/1000);
+  const tyd=Math.floor(sek/60)+" min "+(sek%60)+" sek";
+  const d=new Date(); const datum=d.getDate()+"/"+(d.getMonth()+1)+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+  skryf({datum,punte,van:rond.length,tyd});
+  stuur(datum,tyd);
+  const p=punte/rond.length;
+  const boodskap = p===1?"Perfek! Wonderlik!":p>=0.7?"Baie goed gedoen!":p>=0.4?"Goed so, probeer weer!":"Dit was 'n goeie probeerslag. Probeer weer, dit word makliker!";
+  app.innerHTML = `
+   <h1>Klaar!</h1>
+   <div class="card">
+     <div class="big">${punte} / ${rond.length}</div>
+     <div class="sub" style="font-size:26px">${boodskap}</div>
+     <div class="sub">Tyd: ${tyd}</div>
+     <button class="main" onclick="begin2()">Nog 'n rondte</button>
+     <button onclick="tuis()">Terug na die begin</button>
+   </div>`;
+}
+function stuur(datum,tyd){
+  try{
+    const kats=[...new Set(rond.map(v=>v.kat))].join(", ");
+    fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},
+      body:JSON.stringify({access_key:WEB3FORMS_KEY,subject:"Ma se Vasvra - "+punte+"/"+rond.length+" - "+tyd,
+        from_name:"Ma se Vasvra",Punte:punte+" van "+rond.length,Tyd:tyd,Datum:datum,Onderwerpe:kats,
+        Foute:foute.length?foute.join(" | "):"Almal reg!"})}).catch(function(){});
+  }catch(e){}
+}
+function begin2(){ tuis(); begin(); }
+
+tuis();
+</script>
+</body>
+</html>
