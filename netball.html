@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tehan's Netball Quiz</title>
+<style>
+  :root{--bg:#f3f7fb;--ink:#1f2a37;--card:#fff;--accent:#1c5fa8;--good:#2e7d32;--bad:#b3541e;--line:#d6e0ec}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:19px;line-height:1.4}
+  .wrap{max-width:640px;margin:0 auto;padding:16px}
+  h1{font-size:30px;text-align:center;margin:12px 0 4px}
+  .sub{text-align:center;color:#556;font-size:17px;margin-bottom:16px}
+  .card{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+  button{font:inherit;width:100%;padding:14px;margin:6px 0;border-radius:12px;border:2px solid var(--accent);background:#fff;color:var(--ink);text-align:left;cursor:pointer}
+  button.main{background:var(--accent);color:#fff;text-align:center;font-weight:bold}
+  button.right{background:#dff3e0;border-color:var(--good)}
+  button.wrong{background:#fbe5d6;border-color:var(--bad)}
+  button:disabled{opacity:1}
+  .cat{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+  .cat label{display:flex;align-items:center;gap:8px;background:#e8f0f9;padding:8px 12px;border-radius:10px}
+  .cat input{width:22px;height:22px}
+  .top{display:flex;justify-content:space-between;font-size:16px;color:#556;margin-bottom:8px}
+  .q{font-size:22px;font-weight:bold;margin:4px 0 10px}
+  .fb{font-size:21px;margin:10px 0;font-weight:bold}
+  .fb.g{color:var(--good)} .fb.b{color:var(--bad)}
+  .big{font-size:52px;text-align:center;margin:6px 0}
+  .small{font-size:16px;color:#556}
+  table{width:100%;border-collapse:collapse;font-size:16px} td{padding:5px 4px;border-bottom:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ===================================================================
+   QUESTIONS - to add one, copy a line and change it:
+   ["Category", "Question", ["answer 1","answer 2","answer 3","answer 4"], number of the right answer (0 = first), "Explanation"]
+   Categories: The Basics, Positions, Rules, The Court, General
+   =================================================================== */
+const VRAE = [
+ // ---- The Basics ----
+ ["The Basics","How many players does each team have on court?",["5","6","7","8"],2,"Seven players per team."],
+ ["The Basics","How long is each quarter in a standard match?",["10 minutes","12 minutes","15 minutes","20 minutes"],2,"Four quarters of 15 minutes (60 minutes of play)."],
+ ["The Basics","How many quarters are there in a match?",["2","3","4","5"],2,"Four quarters."],
+ ["The Basics","How many points is one goal worth?",["1","2","3","5"],0,"Every goal is worth 1 point."],
+ ["The Basics","Which two positions are allowed to score goals?",["GS and GA","WA and C","GA and WA","GK and GS"],0,"Only the Goal Shooter (GS) and Goal Attack (GA) may shoot."],
+ ["The Basics","Netball developed from which sport?",["Basketball","Volleyball","Handball","Hockey"],0,"It grew out of early basketball in the late 1800s."],
+ ["The Basics","How many umpires control a match?",["1","2","3","4"],1,"Two umpires, one at each end."],
+ ["The Basics","How does play restart after a goal is scored?",["Centre pass","Throw-in","Toss-up","Penalty pass"],0,"With a centre pass, taken alternately by each team."],
+ ["The Basics","Which position takes the centre pass?",["Centre","Goal Shooter","Wing Defence","Goal Keeper"],0,"The Centre (C)."],
+ ["The Basics","Within how many seconds of the whistle must the centre pass be taken?",["3","5","10","15"],0,"Within 3 seconds of the umpire's whistle."],
+ // ---- Positions ----
+ ["Positions","What do the letters GS stand for?",["Goal Shooter","Goal Setter","Great Shot","Goal Side"],0,"Goal Shooter."],
+ ["Positions","What do the letters WD stand for?",["Wing Defence","Wide Defence","Win Draw","Wing Dribble"],0,"Wing Defence."],
+ ["Positions","Which position may go anywhere on court EXCEPT the two goal circles?",["Centre","Wing Attack","Goal Defence","Goal Attack"],0,"The Centre can use the whole court except both goal circles."],
+ ["Positions","Where is the Goal Keeper (GK) allowed to play?",["The whole court","Defending third and defending goal circle only","Centre third only","Attacking third"],1,"GK stays in the defending third, including the goal circle."],
+ ["Positions","Where is the Goal Shooter (GS) allowed to play?",["Attacking third, including the goal circle","The whole court","Centre third only","Defending third"],0,"GS stays in the attacking third and goal circle."],
+ ["Positions","Can the Wing Attack (WA) enter the goal circle?",["Yes, always","No","Only in the last quarter","Only if holding the ball"],1,"No. WA plays the centre and attacking thirds but not the goal circle."],
+ ["Positions","Which two defenders may enter the defending goal circle?",["GD and GK","WD and C","GK only","GA and GD"],0,"Goal Defence (GD) and Goal Keeper (GK)."],
+ ["Positions","How many positions are there in a netball team?",["5","6","7","9"],2,"Seven: GS, GA, WA, C, WD, GD, GK."],
+ // ---- Rules ----
+ ["Rules","How long may a player hold the ball before passing or shooting?",["1 second","3 seconds","5 seconds","10 seconds"],1,"3 seconds."],
+ ["Rules","Can a player run with the ball?",["Yes, up to 3 steps","No","Yes, if unmarked","Only the Goal Shooter"],1,"No. Players must stay on their landing foot and pass or shoot within 3 seconds."],
+ ["Rules","A player catches the ball and lands on one foot. What must she do with that landing foot?",["Keep it planted (she may pivot on it)","Take two more steps","Hop forward","Drag it slowly"],0,"The landing foot must not move before the ball is released; she may pivot on it."],
+ ["Rules","How far away must a defender stand from the player with the ball?",["At least 0.9 m (3 feet)","At least 0.3 m","At least 1.5 m","At least 2 m"],0,"At least 0.9 m (3 feet). Closer than that is obstruction."],
+ ["Rules","A defender stands closer than 0.9 m to the player with the ball. What is the call?",["Obstruction","Offside","Stepping","Replay"],0,"Obstruction."],
+ ["Rules","A defender bumps into an attacker and affects play. What is the call?",["Contact","Offside","Stepping","Replay"],0,"Contact. Netball is a non-contact sport."],
+ ["Rules","A Goal Keeper steps into the centre third. What is this called?",["Offside (out of area)","Stepping","Obstruction","Held ball"],0,"Offside (playing out of area)."],
+ ["Rules","What happens when the ball goes out of the court?",["Throw-in to the other team","Centre pass","Penalty shot","Toss-up"],0,"A throw-in to the team that did NOT last touch it."],
+ ["Rules","When a penalty is awarded, where must the player who offended stand?",["Beside the player taking it, out of play until the pass is taken","Behind the goal post","On the bench","In the centre circle"],0,"She stands out of play next to the penalty taker until the pass or shot is taken."],
+ ["Rules","Can the ball be thrown over a whole third without anyone touching it?",["No","Yes","Only when shooting","Only by the Centre"],0,"No. It must be touched by a player in every third it travels through."],
+ ["Rules","Where must a shot at goal be taken from?",["Anywhere in the attacking third","From inside the goal circle","From the centre circle","From behind the post"],1,"From inside the goal circle."],
+ ["Rules","Which of these is NOT allowed?",["Intercepting a pass","Pivoting on one foot","Running with the ball","Passing to a team-mate"],2,"Running with the ball is stepping, a footwork penalty."],
+ // ---- The Court ----
+ ["The Court","How long is a netball court?",["20.5 m","25.5 m","30.5 m","40 m"],2,"30.5 m long and 15.25 m wide."],
+ ["The Court","How high is the goal post?",["2.5 m","3.05 m","3.5 m","4 m"],1,"3.05 m (10 feet)."],
+ ["The Court","Is there a backboard behind the netball ring?",["No","Yes","Only in men's netball","Only indoors"],0,"No backboard, which is one difference from basketball."],
+ ["The Court","Into how many equal parts is the court divided?",["2","3","4","5"],1,"Three thirds."],
+ ["The Court","What are the three thirds called?",["Defending, centre and attacking (goal) third","Left, middle and right","Front, middle and back","Home, away and neutral"],0,"Goal (defending), centre and goal (attacking) thirds."],
+ ["The Court","What is the approximate radius of the goal circle?",["2.5 m","3.7 m","4.9 m","6 m"],2,"4.9 m."],
+ // ---- General ----
+ ["General","Where was the 2023 Netball World Cup held?",["Sydney","Cape Town","London","Auckland"],1,"Cape Town, South Africa."],
+ ["General","Which country's national netball team is called the Diamonds?",["Australia","New Zealand","England","Jamaica"],0,"Australia."],
+ ["General","Which country's national netball team is called the Silver Ferns?",["Australia","New Zealand","England","South Africa"],1,"New Zealand."],
+ ["General","Which country's national netball team is called the Proteas?",["South Africa","Australia","Jamaica","England"],0,"South Africa (the SPAR Proteas)."],
+ ["General","Which country has won the Netball World Cup the most times?",["England","South Africa","Australia","Jamaica"],2,"Australia, with the most titles by far."]
+];
+/* ================================================================== */
+
+const KATS = ["The Basics","Positions","Rules","The Court","General"];
+const RONDE = 10;
+const app = document.getElementById("app");
+let rond, idx, punte, t0, gekies;
+
+function lees(){ try{return JSON.parse(localStorage.getItem("netball")||"[]")}catch(e){return[]} }
+function skryf(r){ try{const h=lees();h.unshift(r);localStorage.setItem("netball",JSON.stringify(h.slice(0,10)))}catch(e){} }
+function skud(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+
+function tuis(){
+  const h = lees();
+  let hist = "";
+  if(h.length){
+    hist = '<div class="card"><b>Your previous rounds</b><table>' +
+      h.slice(0,5).map(r=>`<tr><td>${esc(r.datum)}</td><td>${r.punte} / ${r.van}</td><td>${r.tyd}</td></tr>`).join("") +
+      '</table></div>';
+  }
+  app.innerHTML = `
+   <h1>🏐 Tehan's Netball Quiz</h1>
+   <div class="sub">Hi Tehan! Learn the rules one question at a time</div>
+   <div class="card">
+     <b>Pick your topics</b>
+     <div class="cat">${KATS.map(k=>`<label><input type="checkbox" value="${k}" checked> ${k}</label>`).join("")}</div>
+     <button class="main" onclick="begin()">Start (${RONDE} questions)</button>
+   </div>${hist}
+   <div class="small" style="text-align:center">${VRAE.length} questions in total</div>`;
+}
+
+function begin(){
+  const sel=[...document.querySelectorAll(".cat input:checked")].map(i=>i.value);
+  let poel=VRAE.filter(v=>sel.includes(v[0]));
+  if(!poel.length) poel=VRAE;
+  let gesien=[]; try{gesien=JSON.parse(localStorage.getItem("netball_seen")||"[]")}catch(e){}
+  let vars=poel.filter(v=>!gesien.includes(v[1]));
+  if(vars.length<RONDE){ gesien=gesien.filter(g=>!poel.some(v=>v[1]===g)); vars=poel; }
+  rond=skud(vars).slice(0,RONDE);
+  try{localStorage.setItem("netball_seen",JSON.stringify(gesien.concat(rond.map(v=>v[1]))))}catch(e){}
+  rond=rond.map(v=>({kat:v[0],vraag:v[1],opsies:skud(v[2]),regte:v[2][v[3]],wenk:v[4]}));
+  idx=0; punte=0; t0=Date.now(); vraag();
+}
+
+function vraag(){
+  gekies=false;
+  const v=rond[idx];
+  app.innerHTML = `
+   <div class="top"><span>Question ${idx+1} of ${rond.length}</span><span>${esc(v.kat)}</span></div>
+   <div class="card">
+     <div class="q">${esc(v.vraag)}</div>
+     ${v.opsies.map((o,i)=>`<button class="opt" onclick="kies(${i})">${esc(o)}</button>`).join("")}
+     <div id="fb"></div>
+   </div>`;
+}
+
+function kies(i){
+  if(gekies) return; gekies=true;
+  const v=rond[idx]; const bs=document.querySelectorAll("button.opt");
+  const reg = v.opsies[i]===v.regte;
+  if(reg) punte++;
+  bs.forEach((b,j)=>{ b.disabled=true; if(v.opsies[j]===v.regte) b.classList.add("right"); else if(j===i) b.classList.add("wrong"); });
+  const fb=document.getElementById("fb");
+  fb.innerHTML = (reg ? `<div class="fb g">✔ Correct!</div>` : `<div class="fb b">Not quite. The answer is: ${esc(v.regte)}</div>`)
+     + `<div class="small">${esc(v.wenk||"")}</div>`
+     + `<button class="main" onclick="volgende()">${idx+1<rond.length?"Next question":"See my score"}</button>`;
+  fb.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+function volgende(){ idx++; if(idx<rond.length) vraag(); else einde(); }
+
+function einde(){
+  const sek=Math.round((Date.now()-t0)/1000);
+  const tyd=Math.floor(sek/60)+" min "+(sek%60)+" sec";
+  const d=new Date(); const datum=d.getDate()+"/"+(d.getMonth()+1)+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+  skryf({datum,punte,van:rond.length,tyd});
+  const p=punte/rond.length;
+  const msg = p===1?"Perfect score! Star player!":p>=0.7?"Great job!":p>=0.4?"Good effort, try again!":"Keep practising, it gets easier!";
+  app.innerHTML = `
+   <h1>Full time!</h1>
+   <div class="card">
+     <div class="big">${punte} / ${rond.length}</div>
+     <div class="sub" style="font-size:22px">${msg}</div>
+     <div class="sub">Time: ${tyd}</div>
+     <button class="main" onclick="begin2()">Another round</button>
+     <button onclick="tuis()">Back to start</button>
+   </div>`;
+}
+function begin2(){ tuis(); begin(); }
+
+tuis();
+</script>
+</body>
+</html>
