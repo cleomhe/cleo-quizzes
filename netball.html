@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tehan's Netball Quiz</title>
+<title>Netball Rules Quiz</title>
 <style>
   :root{--bg:#f3f7fb;--ink:#1f2a37;--card:#fff;--accent:#1c5fa8;--good:#2e7d32;--bad:#b3541e;--line:#d6e0ec}
   *{box-sizing:border-box}
@@ -91,9 +91,10 @@ const VRAE = [
 const KATS = ["The Basics","Positions","Rules","The Court","General"];
 const RONDE = 10;
 const app = document.getElementById("app");
-let rond, idx, punte, t0, gekies, foute;
+let rond, idx, punte, t0, gekies, foute, naam="";
 const WEB3FORMS_KEY = "2e1d3de6-f101-4465-bf9f-840e9de848c5"; // each round's score is emailed (the key is not secret)
 
+try{naam=localStorage.getItem("netball_name")||""}catch(e){}
 function lees(){ try{return JSON.parse(localStorage.getItem("netball")||"[]")}catch(e){return[]} }
 function skryf(r){ try{const h=lees();h.unshift(r);localStorage.setItem("netball",JSON.stringify(h.slice(0,10)))}catch(e){} }
 function skud(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -108,9 +109,11 @@ function tuis(){
       '</table></div>';
   }
   app.innerHTML = `
-   <h1>🏐 Tehan's Netball Quiz</h1>
-   <div class="sub">Hi Tehan! Learn the rules one question at a time</div>
+   <h1>🏐 Netball Rules Quiz</h1>
+   <div class="sub">Learn the rules one question at a time</div>
    <div class="card">
+     <b>Your name</b>
+     <input id="naam" type="text" placeholder="Type your name here" autocomplete="name" value="${esc(naam)}" style="font:inherit;width:100%;padding:12px;margin:6px 0 14px;border:2px solid var(--line);border-radius:10px">
      <b>Pick your topics</b>
      <div class="cat">${KATS.map(k=>`<label><input type="checkbox" value="${k}" checked> ${k}</label>`).join("")}</div>
      <button class="main" onclick="begin()">Start (${RONDE} questions)</button>
@@ -119,6 +122,12 @@ function tuis(){
 }
 
 function begin(){
+  const ni=document.getElementById("naam");
+  if(ni){
+    naam=ni.value.trim();
+    if(!naam){ ni.style.borderColor="#b3541e"; ni.placeholder="Please type your name first"; ni.focus(); return; }
+    try{localStorage.setItem("netball_name",naam)}catch(e){}
+  }
   const sel=[...document.querySelectorAll(".cat input:checked")].map(i=>i.value);
   let poel=VRAE.filter(v=>sel.includes(v[0]));
   if(!poel.length) poel=VRAE;
@@ -179,8 +188,8 @@ function einde(){
 function stuur(datum,tyd){
   try{
     fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},
-      body:JSON.stringify({access_key:WEB3FORMS_KEY,subject:"Tehan Netball Quiz - "+punte+"/"+rond.length+" - "+tyd,
-        from_name:"Tehan's Netball Quiz",Score:punte+" of "+rond.length,Time:tyd,Date:datum,
+      body:JSON.stringify({access_key:WEB3FORMS_KEY,subject:"Netball Quiz - "+naam+" - "+punte+"/"+rond.length+" - "+tyd,
+        from_name:"Netball Quiz",Name:naam,Score:punte+" of "+rond.length,Time:tyd,Date:datum,
         Topics:[...new Set(rond.map(v=>v.kat))].join(", "),
         Missed:foute.length?foute.join(" | "):"None, all correct!"})}).catch(function(){});
   }catch(e){}
