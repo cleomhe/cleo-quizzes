@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLEO RT Quiz</title>
+<style>
+  :root{
+    --navy:#1f3354; --orange:#f5a623; --bg:#f3f5f8; --card:#ffffff; --ink:#1d2433; --muted:#5d6678;
+    --line:#d9dee7; --good:#1e7a46; --goodbg:#e6f4ec; --bad:#b3261e; --badbg:#fbe9e7;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  header{background:var(--card);border-bottom:4px solid var(--navy)}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
+  .head h1{margin:0;font-size:20px;color:var(--navy);letter-spacing:.3px}
+  .head p{margin:2px 0 0;color:var(--muted);font-size:13px;font-style:italic}
+  .logo{display:flex;align-items:center;gap:6px;flex-shrink:0}
+  .logo b{font:800 26px/1 "Arial Narrow",Arial,sans-serif;color:var(--navy);letter-spacing:1px}
+  main{padding:20px 16px 40px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:16px}
+  .bar{background:var(--navy);color:#fff;font-weight:700;font-size:13px;letter-spacing:.6px;text-transform:uppercase;padding:9px 14px;border-radius:6px;margin:-4px 0 16px;text-align:center}
+  label{display:block;font-weight:600;margin:14px 0 6px}
+  input[type=text]{width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;font-size:16px}
+  input[type=text]:focus{outline:2px solid var(--orange);border-color:var(--orange)}
+  .hint{font-size:13px;color:var(--muted);margin-top:4px}
+  .err{color:var(--bad);font-size:14px;margin-top:6px;min-height:1em}
+  button{font:inherit;cursor:pointer;border-radius:8px;border:0;padding:12px 18px;font-weight:700}
+  .btn{background:var(--navy);color:#fff;width:100%;margin-top:18px}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.alt{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+  .progress{height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:6px}
+  .progress span{display:block;height:100%;background:var(--orange);width:0;transition:width .3s}
+  .meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:14px}
+  .q{font-size:18px;font-weight:700;margin:0 0 14px}
+  .opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);color:var(--ink);font-weight:500;margin:8px 0;padding:12px 14px}
+  .opt:hover:not(:disabled){border-color:var(--navy)}
+  .opt.right{border-color:var(--good);background:var(--goodbg)}
+  .opt.wrong{border-color:var(--bad);background:var(--badbg)}
+  .opt:disabled{cursor:default}
+  .why{margin-top:14px;padding:12px 14px;border-left:4px solid var(--navy);background:#f1f4f9;border-radius:4px;display:none}
+  .why.show{display:block}
+  .why h3{margin:0 0 4px;font-size:15px}
+  .why .ok{color:var(--good)} .why .no{color:var(--bad)}
+  .why p{margin:4px 0 0}
+  .why small{display:block;color:var(--muted);margin-top:6px}
+  .score{font-size:44px;font-weight:800;color:var(--navy);text-align:center;margin:4px 0}
+  .verdict{text-align:center;font-weight:700;font-size:18px;margin-bottom:6px}
+  .pass{color:var(--good)} .fail{color:var(--bad)}
+  .decl{background:#f3f4f6;border-left:4px solid var(--navy);padding:12px 14px;border-radius:4px;font-size:15px}
+  .check{display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-weight:500}
+  .check input{width:22px;height:22px;margin-top:2px;flex-shrink:0}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+  th{background:var(--navy);color:#fff}
+  .status{margin-top:12px;padding:12px;border-radius:8px;font-weight:600;display:none}
+  .status.show{display:block}
+  .status.okk{background:var(--goodbg);color:var(--good)}
+  .status.bad{background:var(--badbg);color:var(--bad)}
+  .hide{display:none}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:0 16px 30px}
+  @media print{
+    header,.btn,.noprint,footer{display:none!important}
+    body{background:#fff}.card{border:0;padding:0}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap head">
+    <div>
+      <h1>REACH TRUCK (RT)</h1>
+      <p>Unit standard 242972 · F5 · Accredited service provider · TETA05-139</p>
+    </div>
+    <div class="logo" aria-label="CLEO">
+      <svg width="34" height="30" viewBox="0 0 34 30" aria-hidden="true"><polygon points="17,1 33,29 1,29" fill="#f5a623"/><text x="17" y="26" text-anchor="middle" font-family="Arial" font-weight="800" font-size="15" fill="#1f3354">C</text></svg>
+      <b>CLEO</b>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- STEP 1: details -->
+  <section id="s1" class="card">
+    <div class="bar">Learner details</div>
+    <p>Answer the questions on reach truck operation, from the RT learner guide and the weekly RT toolbox talks. After each answer you will see the correct answer and <b>why</b>. Your first answer counts. When you finish, your result is sent to CLEO.</p>
+    <label for="name">Full name and surname</label>
+    <input id="name" type="text" autocomplete="name" placeholder="e.g. Thabo Mokoena">
+    <label for="idn">SA ID number</label>
+    <input id="idn" type="text" inputmode="numeric" maxlength="13" placeholder="13 digits">
+    <div class="hint">No spaces. Passport holders: type the passport number.</div>
+    <label for="site">Company / site (optional)</label>
+    <input id="site" type="text" placeholder="e.g. Shoprite Centurion DC">
+    <div class="err" id="err1"></div>
+    <button class="btn" id="start">Start the questions</button>
+  </section>
+
+  <!-- STEP 2: questions -->
+  <section id="s2" class="card hide">
+    <div class="progress"><span id="prog"></span></div>
+    <div class="meta"><span id="count"></span><span id="section"></span></div>
+    <p class="q" id="qtext"></p>
+    <div id="opts"></div>
+    <div class="why" id="why"></div>
+    <button class="btn" id="next" disabled>Next question</button>
+  </section>
+
+  <!-- STEP 3: result + declaration -->
+  <section id="s3" class="card hide">
+    <div class="bar">Your result</div>
+    <div class="score" id="score"></div>
+    <div class="verdict" id="verdict"></div>
+    <p style="text-align:center;color:var(--muted);margin-top:0" id="who"></p>
+
+    <div class="noprint">
+      <div class="decl"><b>DECLARATION</b><br>I acknowledge that I have received, read and understand the reach truck training and toolbox talks, and undertake to apply them at all times when operating a reach truck.</div>
+      <label class="check"><input type="checkbox" id="agree"> I agree with the declaration above</label>
+      <button class="btn" id="send" disabled>Submit my result to CLEO</button>
+      <div class="status" id="status"></div>
+      <button class="btn alt hide" id="mailbtn">Send by email instead</button>
+      <button class="btn alt" id="print">Save / print my result</button>
+    </div>
+
+    <h3 style="margin-top:22px">Your answers</h3>
+    <table id="report"><thead><tr><th>#</th><th>Question</th><th>Your answer</th><th></th></tr></thead><tbody></tbody></table>
+  </section>
+</main>
+<footer>CLEO Accredited Training · General safety rules · Lifting machine / lift truck operation</footer>
+
+<script>
+/* ===== SETTINGS (Joe can change these) ===== */
+const CONFIG = {
+  quizTitle: "RT Training",  // name of this test (shows on the result mail and PDF)
+  sendTo: "jolivier@mycleo.co.za",   // where results go
+  web3formsKey: "2e1d3de6-f101-4465-bf9f-840e9de848c5",               // paste the Web3Forms access key here to switch on automatic emailing
+  passMark: 80                        // percent needed to pass
+};
+
+/* ===== QUESTIONS (from 4. General_Safety_Rules.pdf) ===== */
+const QUESTIONS = [
+ {s:"1 · Law and your duties", q:"Who may operate a reach truck of 750 kg capacity or more?", a:"Only an operator with a certificate of training from an approved provider", o:["Anyone who has watched another driver","Anyone with a car driver's licence","Anyone the supervisor points out"], why:"Driven Machinery Regulation 18(11): lift trucks of 750 kg or more may only be operated by someone holding a certificate of training from an approved organisation.", ref:"Learner guide module 2 · DMR 18(11)"},
+ {s:"1 · Law and your duties", q:"Under Section 14 of the OHS Act, which of these is YOUR duty as an employee?", a:"Take care of yourself and others, use PPE, follow procedures and report risks", o:["Only do what makes the target","Fix machines yourself","Safety is only management's job"], why:"Section 14: take care of your own safety and anyone affected by your work, follow lawful instructions and use PPE, report hazards immediately, and ask when unsure.", ref:"Toolbox week 11 · OHS Act s14"},
+ {s:"1 · Law and your duties", q:"Under Section 8 of the OHS Act, what should your employer provide?", a:"Safe, maintained equipment, training on the risks and proper supervision", o:["Only a uniform","Nothing – safety is your own problem","Overtime pay instead of safety"], why:"Section 8: the employer must provide safe systems and maintained equipment, explain the risks, train and supervise. If a duty stays unmet, report it and escalate.", ref:"Toolbox week 13 · OHS Act s8"},
+ {s:"1 · Law and your duties", q:"A co-worker asks to be lifted on the forks to reach a high shelf. What do you do?", a:"Refuse – people may only be lifted in an approved, purpose-built cage", o:["Lift them slowly","Lift them if they hold on","Lift them on an empty pallet"], why:"DMR 18(8): nobody may be lifted by a lifting machine unless it has a cradle approved for that purpose. Never lift people on forks or pallets.", ref:"Learner guide modules 2 & 6"},
+
+ {s:"2 · Pre-use checks", q:"What does \"No check, no key\" mean?", a:"The full pre-use inspection must be done before the truck moves, every shift", o:["Only check once a week","Ask someone else for the key","A quick glance is enough"], why:"A 30-second glance is not an inspection. Most parts give warning signs – soft brakes, slow leaks, slack chains – before they fail.", ref:"Toolbox week 9 · Pre-use inspection discipline"},
+ {s:"2 · Pre-use checks", q:"After the walk-round and switch-on checks, which tests come next?", a:"Brake test, then steering test", o:["Steering test, then brake test","Only the hooter","No tests if the truck looks fine"], why:"Always do a brake test at the start of the day after the other checks, then a steering test – before you need to rely on them.", ref:"Learner guide module 6 · Toolbox week 9"},
+ {s:"2 · Pre-use checks", q:"You find a fault that makes the truck unsafe. What do you do?", a:"Don't use it – tag it out, take the key to the supervisor and report it", o:["Use it carefully till shift end","Repair it yourself","Leave it for the next shift"], why:"Never operate a truck that needs repairs. Ignored defects stay on the truck for the next person. Tag out and report immediately.", ref:"Learner guide module 6 · Toolbox week 9"},
+ {s:"2 · Pre-use checks", q:"Why must you never run your hand along a hydraulic hose to look for a leak?", a:"A pinhole leak at high pressure can inject oil through your skin", o:["The oil is only messy","It voids the warranty","The hose may be cold"], why:"Hydraulic systems run at very high pressure. A tiny hole can inject oil through the skin – a serious injury. Report weeping fluid; don't fiddle.", ref:"Learner guide module 4 – Hydraulic system"},
+ {s:"2 · Pre-use checks", q:"Why must there be no smoking, flames or sparks near a battery?", a:"Batteries give off flammable hydrogen gas that can explode", o:["Light damages the acid","It is only a company rule","It drains the charge"], why:"A charging battery gives off hydrogen gas. Wear safety glasses and gloves – the electrolyte is sulphuric acid – and wash your hands afterwards.", ref:"Learner guide module 4 – Battery safety"},
+
+ {s:"3 · Stability and capacity", q:"A reach truck will not tip over as long as the centre of gravity stays…", a:"Inside the stability triangle", o:["Above the mast","Behind the battery","Outside the wheels"], why:"The truck's support points form the stability triangle. If the combined centre of gravity moves outside it, the truck tips.", ref:"Learner guide module 5"},
+ {s:"3 · Stability and capacity", q:"The load chart shows 2000 kg at a 1070 mm load centre and 1500 kg at 1500 mm. What happens as the load centre gets longer?", a:"The safe capacity drops", o:["The capacity increases","Nothing changes","The truck becomes more stable"], why:"The further the load's centre of gravity is from the heel of the forks, the less you may lift. Keep loads tight against the heel and check the capacity plate.", ref:"Learner guide module 5 – Capacity charts"},
+ {s:"3 · Stability and capacity", q:"Which of these can cause a sideways tip-over?", a:"Turning at speed or turning with a raised load", o:["Driving slowly in a straight line","Lowering the forks","Stopping smoothly"], why:"Lateral instability: turning at speed (loaded or empty), driving across a ramp, off-centre loads and turning with raised loads.", ref:"Learner guide module 5"},
+
+ {s:"4 · Travelling and awareness", q:"Why must you travel at walking pace in the aisles?", a:"Braking distance grows with the square of speed – double the speed, about four times the distance", o:["To save the battery","Because the supervisor is watching","Speed doesn't matter in aisles"], why:"At walking pace a reach truck stops in about a metre. At 15 km/h you cover 4.2 m every second. Speed takes away your reaction time.", ref:"Toolbox weeks 1 & 4"},
+ {s:"4 · Travelling and awareness", q:"What is the safe sequence at every intersection and doorway?", a:"Stop, look, horn, proceed", o:["Horn and keep going","Speed up to clear it","Flash lights only"], why:"Stop (2 seconds at blind corners), look both ways, sound the horn, then go if clear. Never assume a path is clear because it was clear yesterday.", ref:"Toolbox weeks 1 & 4"},
+ {s:"4 · Travelling and awareness", q:"Where should your eyes be while travelling?", a:"On the path ahead – up, down and behind – not on the load", o:["On the pallet","On your phone","On the racking labels"], why:"Looking only at the load makes you blind to what is ahead. Check mast clearance above and scan behind before reversing.", ref:"Toolbox week 4 · Situational awareness"},
+ {s:"4 · Travelling and awareness", q:"A pedestrian is near your path. When may you drive past?", a:"Only once you have eye contact and know they've seen you", o:["Whenever you hoot","Immediately – trucks have right of way","When they step aside"], why:"Pedestrians have right of way. Wait for eye contact – don't drive past until you know they have seen you.", ref:"Toolbox weeks 1 & 4"},
+ {s:"4 · Travelling and awareness", q:"How high should the forks be while travelling?", a:"Just clear of the floor – about 150–200 mm, mast tilted back", o:["At eye level","As high as possible","Touching the floor"], why:"Never travel with forks raised more than 150–200 mm. Keep the load low, centred and tilted back.", ref:"Learner guide module 6 · Toolbox week 2"},
+ {s:"4 · Travelling and awareness", q:"You see shrink wrap and strapping on the aisle floor. What do you do?", a:"Pick it up straight away – it can make the truck skid into the racks", o:["Drive over it","Leave it for the cleaners","Push it aside with the forks"], why:"Clear as you go – it takes ten seconds. Never drive through a spill: stop, report it and make sure it is cleaned.", ref:"Toolbox week 3 · Housekeeping"},
+
+ {s:"5 · Stacking and load handling", q:"You feel resistance while putting a pallet into a rack location. What do you do?", a:"Stop, reverse about 20 cm, realign and try again", o:["Push harder","Use the side-shift to shove it in","Tilt the mast to push it"], why:"Resistance means you are not aligned. Never ram or force – one more impact can make the beam above your head fail.", ref:"Toolbox week 7 · Safe stacking, no forcing"},
+ {s:"5 · Stacking and load handling", q:"What is the side-shift for?", a:"Fine adjustment of 1–2 cm only", o:["Pushing pallets into place","Opening doors","Moving stock sideways along the beam"], why:"Side-shift is for fine-tuning, never a substitute for alignment. Align visually before entering every location.", ref:"Toolbox week 7"},
+ {s:"5 · Stacking and load handling", q:"How far must the forks go under the load before you lift?", a:"At least two-thirds, with the load centred between the forks", o:["Only the fork tips","Half-way is enough","It doesn't matter"], why:"Off-centre loads fall or tip the truck sideways. Off-centre forks are the moment damage begins.", ref:"Learner guide module 6 · Toolbox week 2"},
+ {s:"5 · Stacking and load handling", q:"What is the first step when stacking a load into racking?", a:"Stop square to the rack", o:["Lift the mast while driving","Approach at an angle","Tilt the mast fully forward"], why:"Stop square, neutral, forks level, lift to height, inch forward, observe, place the load square, lower until the forks are clear.", ref:"Learner guide module 8 – Stacking procedure"},
+ {s:"5 · Stacking and load handling", q:"You notice a damaged rack beam. What do you do?", a:"Report it immediately – a damaged beam is a collapse waiting to happen", o:["Keep using that location","Only report it at month end","Straighten it with the forks"], why:"Report rack damage straight away so the location can be closed and repaired.", ref:"Toolbox weeks 7 & 12"},
+
+ {s:"6 · Speak up and report", q:"A near miss happened but nobody got hurt. Should you report it?", a:"Yes – near misses are free warnings before a real injury", o:["No, nothing happened","Only if a manager saw it","Only if there is damage"], why:"Under-reporting 'minor' issues leads to major accidents. Report every near miss, spill, rack wobble, cracked pallet or strange noise immediately.", ref:"Toolbox week 8 · Reporting incidents"},
+ {s:"6 · Speak up and report", q:"You are told to skip a safety step to hit the target. What do you do?", a:"Stop, name the step clearly, and escalate if pressured", o:["Skip it – targets come first","Do it your own way","Skip it just this once"], why:"SOPs are written in blood. Speed is never an excuse. Escalate to your supervisor or SHE rep – don't improvise.", ref:"Toolbox week 5 · SOP compliance"},
+ {s:"6 · Speak up and report", q:"You are falling behind on PPH. What is the safe thing to do?", a:"Tell your supervisor early (within 15 minutes) and name the blocker", o:["Rush to catch up","Say nothing till end of shift","Skip checks to save time"], why:"Silent struggling leads to rushing, and rushing hurts people. Problems raised early can be fixed.", ref:"Toolbox week 6 · Communication and PPH"},
+ {s:"6 · Speak up and report", q:"You find failed brakes, a blocked fire exit or damaged racking. What is the rule?", a:"Stop work – don't just slow down – secure the area and tell your supervisor", o:["Slow down and carry on","Work around it","Wait till someone else reports it"], why:"Half-measures around a real hazard still expose you. Secure the area, give the reason, and escalate if pressured.", ref:"Toolbox week 12 · Stop work if it is unsafe"},
+ {s:"6 · Speak up and report", q:"You have reported the same hazard twice and nothing changed. Who can help?", a:"Your SHE representative, who takes it to the safety committee", o:["Nobody – leave it","Post it on social media","Fix it yourself"], why:"A SHE rep is a colleague chosen to represent you. Give them the exact location, time and what happened.", ref:"Toolbox week 14 · SHE rep and safety committee"},
+ {s:"6 · Speak up and report", q:"A new driver copies how you work. What does that mean for you?", a:"Lead by example – they follow what you do, not the posters", o:["Nothing – they must read the handbook","Show them shortcuts","It is the trainer's problem"], why:"Standards slip quietly; silence is permission. Say something the first time, own your area and hold the line under pressure.", ref:"Toolbox weeks 5 & 10 · Culture commitment"},
+
+ {s:"7 · Parking and emergencies", q:"How do you park the reach truck at the end of your shift?", a:"Forks on the floor, brake on, power off, key out, battery on charge – clear of exits", o:["Forks raised so people can see them","In front of the fire exit","Key left in for the next driver"], why:"Park on level ground away from exits, doorways and fire equipment, with the forks fully lowered and the parking brake on. Report unusual noises.", ref:"Learner guide modules 4 & 6 · Toolbox week 2"}
+];
+
+/* ===== APP ===== */
+const $ = id => document.getElementById(id);
+let order = [], idx = 0, answers = [], learner = {};
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function esc(t){ return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function validSAID(id){
+  if(!/^\d{13}$/.test(id)) return false;
+  let sum=0; for(let i=0;i<13;i++){ let d=+id[12-i]; if(i%2===1){ d*=2; if(d>9) d-=9; } sum+=d; }
+  return sum%10===0;
+}
+
+$("start").onclick = () => {
+  const name=$("name").value.trim().replace(/\s+/g," "), idn=$("idn").value.replace(/\s/g,""), site=$("site").value.trim();
+  if(name.split(" ").length<2){ $("err1").textContent="Please type your name and surname."; return; }
+  const isSA=/^\d+$/.test(idn);
+  if(isSA && !validSAID(idn)){ $("err1").textContent="That SA ID number is not valid. Check all 13 digits."; return; }
+  if(!isSA && idn.length<6){ $("err1").textContent="Please type your ID or passport number."; return; }
+  learner={name,id:idn,site,started:new Date()};
+  order=shuffle(QUESTIONS.map((q,i)=>i)); idx=0; answers=[];
+  $("s1").classList.add("hide"); $("s2").classList.remove("hide");
+  showQ();
+};
+
+function showQ(){
+  const q=QUESTIONS[order[idx]];
+  $("prog").style.width=(idx/order.length*100)+"%";
+  $("count").textContent=`Question ${idx+1} of ${order.length}`;
+  $("section").textContent=q.s;
+  $("qtext").textContent=q.q;
+  $("why").className="why"; $("why").innerHTML="";
+  $("next").disabled=true;
+  $("next").textContent= idx===order.length-1 ? "See my result" : "Next question";
+  const opts=$("opts"); opts.innerHTML="";
+  shuffle([q.a,...q.o]).forEach(t=>{
+    const b=document.createElement("button"); b.className="opt"; b.textContent=t;
+    b.onclick=()=>pick(b,t,q); opts.appendChild(b);
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function pick(btn,t,q){
+  const ok = t===q.a;
+  answers.push({n:order[idx]+1,q:q.q,given:t,correct:q.a,ok});
+  [...$("opts").children].forEach(b=>{ b.disabled=true; if(b.textContent===q.a) b.classList.add("right"); });
+  if(!ok) btn.classList.add("wrong");
+  $("why").innerHTML=`<h3 class="${ok?'ok':'no'}">${ok?'✔ Correct':'✘ Not correct'}</h3>${ok?'':`<p><b>Correct answer:</b> ${esc(q.a)}</p>`}<p><b>Why:</b> ${esc(q.why)}</p><small>Safety rules: ${esc(q.ref)}</small>`;
+  $("why").className="why show";
+  $("next").disabled=false;
+}
+
+$("next").onclick=()=>{ idx++; if(idx<order.length) showQ(); else finish(); };
+
+function result(){
+  const right=answers.filter(a=>a.ok).length, pct=Math.round(right/answers.length*100);
+  return {right,total:answers.length,pct,pass:pct>=CONFIG.passMark};
+}
+
+function finish(){
+  learner.finished=new Date();
+  const r=result();
+  $("s2").classList.add("hide"); $("s3").classList.remove("hide");
+  $("score").textContent=`${r.pct}%`;
+  $("verdict").innerHTML= r.pass ? `<span class="pass">PASSED – ${r.right} of ${r.total} correct</span>` : `<span class="fail">NOT YET COMPETENT – ${r.right} of ${r.total} correct (need ${CONFIG.passMark}%)</span>`;
+  $("who").textContent=`${learner.name} · ${learner.id}${learner.site?' · '+learner.site:''} · ${learner.finished.toLocaleString('en-ZA')}`;
+  const tb=$("report").querySelector("tbody"); tb.innerHTML="";
+  answers.forEach((a,i)=>{ tb.insertAdjacentHTML("beforeend",`<tr><td>${i+1}</td><td>${esc(a.q)}</td><td>${esc(a.given)}${a.ok?'':`<br><small style="color:var(--good)">Correct: ${esc(a.correct)}</small>`}</td><td>${a.ok?'✔':'✘'}</td></tr>`); });
+  window.scrollTo({top:0});
+}
+
+$("agree").onchange=e=>{ $("send").disabled=!e.target.checked; };
+
+function reportText(){
+  const r=result();
+  const lines=[
+    `CLEO ${CONFIG.quizTitle.toUpperCase()} – QUIZ RESULT`,"",
+    `Name: ${learner.name}`, `ID / passport: ${learner.id}`, `Company / site: ${learner.site||'-'}`,
+    `Completed: ${learner.finished.toLocaleString('en-ZA')}`,
+    `Score: ${r.right}/${r.total} (${r.pct}%) – ${r.pass?'PASSED':'NOT YET COMPETENT'}`,
+    `Declaration accepted: ${$("agree").checked?'YES':'NO'}`,"",
+    "Answers:"
+  ];
+  answers.forEach((a,i)=>lines.push(`${i+1}. ${a.ok?'[OK]':'[X] '} ${a.q}\n    Answer: ${a.given}${a.ok?'':`\n    Correct: ${a.correct}`}`));
+  return lines.join("\n");
+}
+
+function status(msg,ok){ const s=$("status"); s.textContent=msg; s.className="status show "+(ok?"okk":"bad"); }
+
+function mailtoLink(){
+  const r=result();
+  const subj=`CLEO quiz: ${CONFIG.quizTitle} – ${learner.name} – ${r.pct}% ${r.pass?"PASS":"NYC"}`;
+  return `mailto:${CONFIG.sendTo}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(reportText())}`;
+}
+
+$("send").onclick=async()=>{
+  const r=result();
+  $("send").disabled=true;
+  if(!CONFIG.web3formsKey){
+    // no automatic mail set up yet: open the learner's own mail app with the report filled in
+    location.href=mailtoLink();
+    status("Your email app has opened with the result filled in. Press SEND in your email app to finish.",true);
+    $("send").disabled=false; return;
+  }
+  status("Sending…",true);
+  try{
+    const res=await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},
+      body:JSON.stringify({access_key:CONFIG.web3formsKey,subject:`CLEO quiz: ${CONFIG.quizTitle} – ${learner.name} – ${r.pct}% ${r.pass?"PASS":"NYC"}`,
+        from_name:"CLEO Safety Quiz",name:learner.name,id_number:learner.id,site:learner.site||"-",score:`${r.right}/${r.total} (${r.pct}%)`,
+        result:r.pass?"PASSED":"NOT YET COMPETENT",message:reportText()})});
+    const j=await res.json();
+    if(j.success){ status("✔ Your result was sent to CLEO. You can close this page.",true); $("agree").disabled=true; }
+    else throw new Error(j.message||"failed");
+  }catch(e){
+    status("Could not send (no internet?). Press 'Send by email instead' or try again.",false);
+    $("send").disabled=false; $("mailbtn").classList.remove("hide");
+  }
+};
+$("mailbtn").onclick=()=>{ location.href=mailtoLink(); };
+$("print").onclick=()=>window.print();
+</script>
+</body>
+</html>
