@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLEO Forklift Quiz</title>
+<style>
+  :root{
+    --navy:#1f3354; --orange:#f5a623; --bg:#f3f5f8; --card:#ffffff; --ink:#1d2433; --muted:#5d6678;
+    --line:#d9dee7; --good:#1e7a46; --goodbg:#e6f4ec; --bad:#b3261e; --badbg:#fbe9e7;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  header{background:var(--card);border-bottom:4px solid var(--navy)}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
+  .head h1{margin:0;font-size:20px;color:var(--navy);letter-spacing:.3px}
+  .head p{margin:2px 0 0;color:var(--muted);font-size:13px;font-style:italic}
+  .logo{display:flex;align-items:center;gap:6px;flex-shrink:0}
+  .logo b{font:800 26px/1 "Arial Narrow",Arial,sans-serif;color:var(--navy);letter-spacing:1px}
+  main{padding:20px 16px 40px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:16px}
+  .bar{background:var(--navy);color:#fff;font-weight:700;font-size:13px;letter-spacing:.6px;text-transform:uppercase;padding:9px 14px;border-radius:6px;margin:-4px 0 16px;text-align:center}
+  label{display:block;font-weight:600;margin:14px 0 6px}
+  input[type=text]{width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;font-size:16px}
+  input[type=text]:focus{outline:2px solid var(--orange);border-color:var(--orange)}
+  .hint{font-size:13px;color:var(--muted);margin-top:4px}
+  .err{color:var(--bad);font-size:14px;margin-top:6px;min-height:1em}
+  button{font:inherit;cursor:pointer;border-radius:8px;border:0;padding:12px 18px;font-weight:700}
+  .btn{background:var(--navy);color:#fff;width:100%;margin-top:18px}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.alt{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+  .progress{height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:6px}
+  .progress span{display:block;height:100%;background:var(--orange);width:0;transition:width .3s}
+  .meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:14px}
+  .q{font-size:18px;font-weight:700;margin:0 0 14px}
+  .opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);color:var(--ink);font-weight:500;margin:8px 0;padding:12px 14px}
+  .opt:hover:not(:disabled){border-color:var(--navy)}
+  .opt.right{border-color:var(--good);background:var(--goodbg)}
+  .opt.wrong{border-color:var(--bad);background:var(--badbg)}
+  .opt:disabled{cursor:default}
+  .why{margin-top:14px;padding:12px 14px;border-left:4px solid var(--navy);background:#f1f4f9;border-radius:4px;display:none}
+  .why.show{display:block}
+  .why h3{margin:0 0 4px;font-size:15px}
+  .why .ok{color:var(--good)} .why .no{color:var(--bad)}
+  .why p{margin:4px 0 0}
+  .why small{display:block;color:var(--muted);margin-top:6px}
+  .score{font-size:44px;font-weight:800;color:var(--navy);text-align:center;margin:4px 0}
+  .verdict{text-align:center;font-weight:700;font-size:18px;margin-bottom:6px}
+  .pass{color:var(--good)} .fail{color:var(--bad)}
+  .decl{background:#f3f4f6;border-left:4px solid var(--navy);padding:12px 14px;border-radius:4px;font-size:15px}
+  .check{display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-weight:500}
+  .check input{width:22px;height:22px;margin-top:2px;flex-shrink:0}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+  th{background:var(--navy);color:#fff}
+  .status{margin-top:12px;padding:12px;border-radius:8px;font-weight:600;display:none}
+  .status.show{display:block}
+  .status.okk{background:var(--goodbg);color:var(--good)}
+  .status.bad{background:var(--badbg);color:var(--bad)}
+  .hide{display:none}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:0 16px 30px}
+  @media print{
+    header,.btn,.noprint,footer{display:none!important}
+    body{background:#fff}.card{border:0;padding:0}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap head">
+    <div>
+      <h1>FORKLIFT (COUNTERBALANCE)</h1>
+      <p>Unit standard 242974 · F1–F4 · Accredited service provider · TETA05-139</p>
+    </div>
+    <div class="logo" aria-label="CLEO">
+      <svg width="34" height="30" viewBox="0 0 34 30" aria-hidden="true"><polygon points="17,1 33,29 1,29" fill="#f5a623"/><text x="17" y="26" text-anchor="middle" font-family="Arial" font-weight="800" font-size="15" fill="#1f3354">C</text></svg>
+      <b>CLEO</b>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- STEP 1: details -->
+  <section id="s1" class="card">
+    <div class="bar">Learner details</div>
+    <p>Answer the questions on forklift operation, from the forklift learner guide and the lift truck drivers toolbox talks. After each answer you will see the correct answer and <b>why</b>. Your first answer counts. When you finish, your result is sent to CLEO.</p>
+    <label for="name">Full name and surname</label>
+    <input id="name" type="text" autocomplete="name" placeholder="e.g. Thabo Mokoena">
+    <label for="idn">SA ID number</label>
+    <input id="idn" type="text" inputmode="numeric" maxlength="13" placeholder="13 digits">
+    <div class="hint">No spaces. Passport holders: type the passport number.</div>
+    <label for="site">Company / site (optional)</label>
+    <input id="site" type="text" placeholder="e.g. Shoprite Centurion DC">
+    <div class="err" id="err1"></div>
+    <button class="btn" id="start">Start the questions</button>
+  </section>
+
+  <!-- STEP 2: questions -->
+  <section id="s2" class="card hide">
+    <div class="progress"><span id="prog"></span></div>
+    <div class="meta"><span id="count"></span><span id="section"></span></div>
+    <p class="q" id="qtext"></p>
+    <div id="opts"></div>
+    <div class="why" id="why"></div>
+    <button class="btn" id="next" disabled>Next question</button>
+  </section>
+
+  <!-- STEP 3: result + declaration -->
+  <section id="s3" class="card hide">
+    <div class="bar">Your result</div>
+    <div class="score" id="score"></div>
+    <div class="verdict" id="verdict"></div>
+    <p style="text-align:center;color:var(--muted);margin-top:0" id="who"></p>
+
+    <div class="noprint">
+      <div class="decl"><b>DECLARATION</b><br>I acknowledge that I have received, read and understand the forklift training and toolbox talks, and undertake to apply them at all times when operating a forklift.</div>
+      <label class="check"><input type="checkbox" id="agree"> I agree with the declaration above</label>
+      <button class="btn" id="send" disabled>Submit my result to CLEO</button>
+      <div class="status" id="status"></div>
+      <button class="btn alt hide" id="mailbtn">Send by email instead</button>
+      <button class="btn alt" id="print">Save / print my result</button>
+    </div>
+
+    <h3 style="margin-top:22px">Your answers</h3>
+    <table id="report"><thead><tr><th>#</th><th>Question</th><th>Your answer</th><th></th></tr></thead><tbody></tbody></table>
+  </section>
+</main>
+<footer>CLEO Accredited Training · General safety rules · Lifting machine / lift truck operation</footer>
+
+<script>
+/* ===== SETTINGS (Joe can change these) ===== */
+const CONFIG = {
+  quizTitle: "Forklift Training",  // name of this test (shows on the result mail and PDF)
+  sendTo: "jolivier@mycleo.co.za",   // where results go
+  web3formsKey: "2e1d3de6-f101-4465-bf9f-840e9de848c5",               // paste the Web3Forms access key here to switch on automatic emailing
+  passMark: 80                        // percent needed to pass
+};
+
+/* ===== QUESTIONS (from 4. General_Safety_Rules.pdf) ===== */
+const QUESTIONS = [
+ {s:"1 · Law and authorisation", q:"Who may operate a forklift of 750 kg capacity or more?", a:"Only a trained operator with a certificate of training from an approved provider", o:["Anyone with a car driver's licence","Anyone who has watched another driver","Anyone the supervisor asks"], why:"Driven Machinery Regulation 18(11): lift trucks of 750 kg or more may only be operated by someone holding a certificate of training from an approved organisation.", ref:"Learner guide module 3 · Toolbox talk 7"},
+ {s:"1 · Law and authorisation", q:"A colleague asks to drive your forklift \"just once\". What do you say?", a:"No – only trained, authorised operators may drive", o:["Yes, if you watch them","Yes, if it's a short trip","Yes, if the load is light"], why:"Never let an unauthorised person use your truck. Only trained, certified and appointed operators drive.", ref:"Toolbox talk 7 · Authorisation, PPE and parking"},
+ {s:"1 · Law and authorisation", q:"Who must supply your PPE, and who must wear it?", a:"The employer supplies it free of charge – you must wear it", o:["You buy your own","Only visitors wear it","Only when the safety officer is on site"], why:"Employers must provide PPE free of charge and teach you to use it. No PPE, no work.", ref:"Learner guide module 4 · Toolbox talk 7"},
+
+ {s:"2 · Pre-use checks", q:"When must the pre-use check be done?", a:"Before the forklift moves, at the start of every shift", o:["Once a week","Only after a breakdown","Only when the supervisor asks"], why:"Checks catch small faults before they become accidents or costly repairs. Check items properly – don't just tick the sheet.", ref:"Learner guide · Lift truck checks · Toolbox talk 1"},
+ {s:"2 · Pre-use checks", q:"The engine oil on the dipstick looks white or milky. What does that point to?", a:"Water is mixing with the oil – report it", o:["The oil is brand new","It is normal for diesel","The oil is too full"], why:"White oil means water is getting into the oil. Report it before the engine is damaged.", ref:"Learner guide · Engine maintenance"},
+ {s:"2 · Pre-use checks", q:"The oil level is low. What may you top up with?", a:"Only oil of the same type and grade", o:["Any oil in the store","Hydraulic oil","Water"], why:"If a level is low, add oil of the same type and grade to that compartment until the correct level is reached.", ref:"Learner guide · Oil checking"},
+ {s:"2 · Pre-use checks", q:"You find a fault that makes the forklift unsafe. What do you do?", a:"Don't use it – tag it out, take the key to the supervisor and report it", o:["Use it carefully till shift end","Fix it yourself","Leave it for the next driver"], why:"Never operate a truck that needs repairs. Report it, remove the key and hand it to the supervisor.", ref:"Learner guide · Safety and operation · Toolbox talk 1"},
+
+ {s:"3 · Fuel, gas and battery", q:"When may you refuel a diesel or petrol forklift?", a:"Only with the engine switched off, and no smoking or naked flames", o:["With the engine idling","Any time it is quiet","While warming up"], why:"Never refuel with the engine running. Never use a naked flame (e.g. a match) to check fuel or battery levels.", ref:"Learner guide · Safety and operation"},
+ {s:"3 · Fuel, gas and battery", q:"Which is a rule for handling LP gas cylinders?", a:"Never roll them or use them as rollers; store them separately", o:["Roll them to move them quickly","Store them next to the battery charger","Leave them lying in the aisle"], why:"Gas cylinders must be handled with care and stored separately to reduce fire risk. LP gas can cause headaches and dizziness if inhaled.", ref:"Learner guide · Handling and storing gas"},
+ {s:"3 · Fuel, gas and battery", q:"You are waiting a long time inside a building with an engine forklift. What do you do?", a:"Switch off to avoid a build-up of exhaust fumes", o:["Leave it idling","Rev the engine to keep it warm","Close the doors"], why:"In enclosed areas, long idling builds up fumes and gases. If there is a wait, switch off.", ref:"Learner guide · Safety and operation"},
+ {s:"3 · Fuel, gas and battery", q:"Where may an electric forklift's battery be charged?", a:"Only in the designated, well-ventilated charging area", o:["Anywhere with a plug","In the aisle next to the racks","In the office"], why:"Charging gives off explosive hydrogen gas. Charge only in a designated area with enough ventilation, and keep flames and sparks away.", ref:"Learner guide · Battery charging · Toolbox talk 2"},
+
+ {s:"4 · Stability and capacity", q:"On a counterbalance forklift, what acts as the pivot point (fulcrum)?", a:"The front wheels / drive axle", o:["The rear steering wheels","The top of the mast","The fork tips"], why:"The forklift works like a seesaw: the truck's weight behind the front wheels counterbalances the load on the forks in front of them.", ref:"Learner guide · Principle of balance"},
+ {s:"4 · Stability and capacity", q:"A forklift will not tip over as long as the centre of gravity stays…", a:"Inside the stability triangle", o:["Above the mast","Behind the counterweight","Outside the wheels"], why:"The front wheels and the rear axle pivot form the stability triangle. If the combined CG moves outside it, the truck tips.", ref:"Learner guide · Stability · Toolbox talk 3"},
+ {s:"4 · Stability and capacity", q:"You fit a clamp or other attachment. What happens to the truck's safe capacity?", a:"It drops – the attachment's weight comes off the rated capacity", o:["It increases","Nothing changes","It doubles"], why:"The weight of attachments must be deducted from the rated capacity, and an attachment also moves the load centre forward.", ref:"Learner guide · Capacity plate"},
+ {s:"4 · Stability and capacity", q:"The load chart shows 3500 kg at 500 mm and 2000 kg at 1070 mm load centre. What happens as the load centre gets longer?", a:"The safe capacity drops", o:["The capacity increases","Nothing changes","The truck becomes more stable"], why:"Keep the load against the heel of the forks. The further out its centre of gravity, the less you may lift.", ref:"Learner guide · Capacity charts"},
+ {s:"4 · Stability and capacity", q:"Which forklift tips over sideways more easily?", a:"An empty forklift", o:["A loaded forklift with the load lowered","Neither – empty trucks cannot tip","Only a truck with a raised load"], why:"An empty truck tips to the side more easily than a loaded one with its load lowered. Lift trucks can tip over even at very low speeds – travel slowly when turning.", ref:"Learner guide · Lateral stability"},
+ {s:"4 · Stability and capacity", q:"Your forklift starts to tip over. What do you do?", a:"Don't jump – hold the steering wheel, brace your feet and lean away from the impact", o:["Jump out as fast as you can","Let go of the wheel","Stand up and step off the back"], why:"Jumping is how operators get crushed under the overhead guard. Stay in the seat, hold on, brace and lean away.", ref:"Learner guide · Tip-over"},
+
+ {s:"5 · Travelling", q:"You are driving DOWN a ramp with a load. Which way should the forklift face?", a:"Drive in reverse, with the load facing uphill", o:["Drive forward with the load facing downhill","Drive across the ramp","Either way is fine"], why:"Keep the load on the uphill side so it can't slide off and the truck stays stable. Downhill with a load: reverse. Uphill with a load: forward.", ref:"Learner guide · Travelling on slopes"},
+ {s:"5 · Travelling", q:"You are driving UP a ramp with a load. How do you drive?", a:"Forward, with the load facing uphill", o:["In reverse","Across the ramp","With the load raised high"], why:"The load always stays on the uphill side. Never turn on or drive across a ramp.", ref:"Learner guide · Travelling on slopes"},
+ {s:"5 · Travelling", q:"How high should the forks be while travelling?", a:"Just clear of the floor (about 150–200 mm), mast tilted back", o:["At eye level","As high as possible","Touching the floor"], why:"Travel with the load as low as possible and tilted back. Never travel with the forks raised more than 150–200 mm.", ref:"Learner guide · Travelling"},
+ {s:"5 · Travelling", q:"A large load blocks your view forward. What do you do?", a:"Travel in reverse with the load trailing and keep a lookout; use a helper if needed", o:["Drive forward and hoot","Lean out the side","Lift the load higher to see under it"], why:"For large loads travel with the load trailing, always looking in the direction of travel. If visibility is still blocked, get a helper.", ref:"Learner guide · Travelling · Toolbox talk 4"},
+ {s:"5 · Travelling", q:"How close may other people work to a working forklift?", a:"No closer than 3 metres – stop if someone won't move", o:["Anywhere if they wear hi-vis","1 metre is fine","It doesn't matter if you hoot"], why:"The 3 metre rule: keep people 3 m away. Hoot to warn them. If someone won't move, stop and call your supervisor.", ref:"Toolbox talk 8 · The 3 metre rule"},
+ {s:"5 · Travelling", q:"What do you do at a blind corner or intersection?", a:"Slow down, sound the hooter and give way to pedestrians", o:["Speed up to get through","Flash the lights only","Carry on – pedestrians must watch out"], why:"Most pedestrian-truck injuries happen at corners, doorways and in reverse. Never overtake at blind spots or intersections.", ref:"Learner guide · Toolbox talk 4"},
+ {s:"5 · Travelling", q:"Someone asks to ride on the forks to another part of the warehouse. What do you do?", a:"Refuse – no passengers, nobody rides the forks", o:["Allow it if you go slowly","Allow it if they hold on","Allow it on a pallet"], why:"A forklift is built for the operator only. Never carry passengers or let anyone ride or be lifted on the forks.", ref:"Learner guide · Toolbox talk 7"},
+
+ {s:"6 · Loading trucks and docks", q:"Before driving into a truck or trailer from a loading dock, what must be in place?", a:"Truck brakes on, wheels chocked and the bridge plate / dock leveller secure", o:["Only the hooter checked","Nothing – just drive in","Only the trailer doors open"], why:"An unsecured truck can move away from the dock while you are driving in or out. Check the bridge plate is secure and nobody is inside the trailer.", ref:"Learner guide · Loading trucks and trailers"},
+ {s:"6 · Loading trucks and docks", q:"Why must you keep a safe distance from the edge of a dock or ramp?", a:"The counterweight and tail swing can pull the forklift over the edge", o:["To save diesel","Only to protect the paint","It isn't necessary"], why:"When steering near a dock edge, the rear swings out and the weight of the counterbalance can take the machine over the edge.", ref:"Learner guide · Loading docks"},
+ {s:"6 · Loading trucks and docks", q:"How do you load a full trailer?", a:"Start at the front and work side to side towards the rear, spreading the load evenly", o:["Start at the back","Put everything on one side","Stack the heaviest items on top"], why:"Spread the load evenly, place heavy loads with care and never exceed the truck or trailer's rated axle loading.", ref:"Learner guide · Loading trucks and trailers"},
+
+ {s:"7 · Stacking and parking", q:"From which part of a stack may articles be removed?", a:"Only from the top tier", o:["From the bottom tier","From the middle","From anywhere that is quick"], why:"General Safety Regulation 8: remove articles only from the topmost tier. Dismantle stacks in danger of collapsing safely.", ref:"Learner guide · Stacking · Toolbox talk 6"},
+ {s:"7 · Stacking and parking", q:"How do you park the forklift at the end of your shift?", a:"Forks lowered to the floor, tilted forward, neutral, parking brake on, engine off, key out", o:["Forks raised so people see them","In front of a fire exit","Key left in for the next driver"], why:"Park on level ground clear of fire aisles, stairs, exits and fire equipment. Never park on an incline without the parking brake applied.", ref:"Learner guide · Shutdown · Toolbox talk 7"},
+ {s:"7 · Stacking and parking", q:"A load has fallen and someone may be hurt. What is your first rule?", a:"Your own safety first – don't rush in; raise the alarm and follow site emergency procedure", o:["Run in immediately","Drive away and say nothing","Lift the load straight away with the forks"], why:"Always consider your safety first and don't rush into danger. Make the area safe, call the first aider and supervisor, and report.", ref:"Learner guide · Emergencies · Toolbox talk 10"}
+];
+
+/* ===== APP ===== */
+const $ = id => document.getElementById(id);
+let order = [], idx = 0, answers = [], learner = {};
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function esc(t){ return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function validSAID(id){
+  if(!/^\d{13}$/.test(id)) return false;
+  let sum=0; for(let i=0;i<13;i++){ let d=+id[12-i]; if(i%2===1){ d*=2; if(d>9) d-=9; } sum+=d; }
+  return sum%10===0;
+}
+
+$("start").onclick = () => {
+  const name=$("name").value.trim().replace(/\s+/g," "), idn=$("idn").value.replace(/\s/g,""), site=$("site").value.trim();
+  if(name.split(" ").length<2){ $("err1").textContent="Please type your name and surname."; return; }
+  const isSA=/^\d+$/.test(idn);
+  if(isSA && !validSAID(idn)){ $("err1").textContent="That SA ID number is not valid. Check all 13 digits."; return; }
+  if(!isSA && idn.length<6){ $("err1").textContent="Please type your ID or passport number."; return; }
+  learner={name,id:idn,site,started:new Date()};
+  order=shuffle(QUESTIONS.map((q,i)=>i)); idx=0; answers=[];
+  $("s1").classList.add("hide"); $("s2").classList.remove("hide");
+  showQ();
+};
+
+function showQ(){
+  const q=QUESTIONS[order[idx]];
+  $("prog").style.width=(idx/order.length*100)+"%";
+  $("count").textContent=`Question ${idx+1} of ${order.length}`;
+  $("section").textContent=q.s;
+  $("qtext").textContent=q.q;
+  $("why").className="why"; $("why").innerHTML="";
+  $("next").disabled=true;
+  $("next").textContent= idx===order.length-1 ? "See my result" : "Next question";
+  const opts=$("opts"); opts.innerHTML="";
+  shuffle([q.a,...q.o]).forEach(t=>{
+    const b=document.createElement("button"); b.className="opt"; b.textContent=t;
+    b.onclick=()=>pick(b,t,q); opts.appendChild(b);
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function pick(btn,t,q){
+  const ok = t===q.a;
+  answers.push({n:order[idx]+1,q:q.q,given:t,correct:q.a,ok});
+  [...$("opts").children].forEach(b=>{ b.disabled=true; if(b.textContent===q.a) b.classList.add("right"); });
+  if(!ok) btn.classList.add("wrong");
+  $("why").innerHTML=`<h3 class="${ok?'ok':'no'}">${ok?'✔ Correct':'✘ Not correct'}</h3>${ok?'':`<p><b>Correct answer:</b> ${esc(q.a)}</p>`}<p><b>Why:</b> ${esc(q.why)}</p><small>Safety rules: ${esc(q.ref)}</small>`;
+  $("why").className="why show";
+  $("next").disabled=false;
+}
+
+$("next").onclick=()=>{ idx++; if(idx<order.length) showQ(); else finish(); };
+
+function result(){
+  const right=answers.filter(a=>a.ok).length, pct=Math.round(right/answers.length*100);
+  return {right,total:answers.length,pct,pass:pct>=CONFIG.passMark};
+}
+
+function finish(){
+  learner.finished=new Date();
+  const r=result();
+  $("s2").classList.add("hide"); $("s3").classList.remove("hide");
+  $("score").textContent=`${r.pct}%`;
+  $("verdict").innerHTML= r.pass ? `<span class="pass">PASSED – ${r.right} of ${r.total} correct</span>` : `<span class="fail">NOT YET COMPETENT – ${r.right} of ${r.total} correct (need ${CONFIG.passMark}%)</span>`;
+  $("who").textContent=`${learner.name} · ${learner.id}${learner.site?' · '+learner.site:''} · ${learner.finished.toLocaleString('en-ZA')}`;
+  const tb=$("report").querySelector("tbody"); tb.innerHTML="";
+  answers.forEach((a,i)=>{ tb.insertAdjacentHTML("beforeend",`<tr><td>${i+1}</td><td>${esc(a.q)}</td><td>${esc(a.given)}${a.ok?'':`<br><small style="color:var(--good)">Correct: ${esc(a.correct)}</small>`}</td><td>${a.ok?'✔':'✘'}</td></tr>`); });
+  window.scrollTo({top:0});
+}
+
+$("agree").onchange=e=>{ $("send").disabled=!e.target.checked; };
+
+function reportText(){
+  const r=result();
+  const lines=[
+    `CLEO ${CONFIG.quizTitle.toUpperCase()} – QUIZ RESULT`,"",
+    `Name: ${learner.name}`, `ID / passport: ${learner.id}`, `Company / site: ${learner.site||'-'}`,
+    `Completed: ${learner.finished.toLocaleString('en-ZA')}`,
+    `Score: ${r.right}/${r.total} (${r.pct}%) – ${r.pass?'PASSED':'NOT YET COMPETENT'}`,
+    `Declaration accepted: ${$("agree").checked?'YES':'NO'}`,"",
+    "Answers:"
+  ];
+  answers.forEach((a,i)=>lines.push(`${i+1}. ${a.ok?'[OK]':'[X] '} ${a.q}\n    Answer: ${a.given}${a.ok?'':`\n    Correct: ${a.correct}`}`));
+  return lines.join("\n");
+}
+
+function status(msg,ok){ const s=$("status"); s.textContent=msg; s.className="status show "+(ok?"okk":"bad"); }
+
+function mailtoLink(){
+  const r=result();
+  const subj=`CLEO quiz: ${CONFIG.quizTitle} – ${learner.name} – ${r.pct}% ${r.pass?"PASS":"NYC"}`;
+  return `mailto:${CONFIG.sendTo}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(reportText())}`;
+}
+
+$("send").onclick=async()=>{
+  const r=result();
+  $("send").disabled=true;
+  if(!CONFIG.web3formsKey){
+    // no automatic mail set up yet: open the learner's own mail app with the report filled in
+    location.href=mailtoLink();
+    status("Your email app has opened with the result filled in. Press SEND in your email app to finish.",true);
+    $("send").disabled=false; return;
+  }
+  status("Sending…",true);
+  try{
+    const res=await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},
+      body:JSON.stringify({access_key:CONFIG.web3formsKey,subject:`CLEO quiz: ${CONFIG.quizTitle} – ${learner.name} – ${r.pct}% ${r.pass?"PASS":"NYC"}`,
+        from_name:"CLEO Safety Quiz",name:learner.name,id_number:learner.id,site:learner.site||"-",score:`${r.right}/${r.total} (${r.pct}%)`,
+        result:r.pass?"PASSED":"NOT YET COMPETENT",message:reportText()})});
+    const j=await res.json();
+    if(j.success){ status("✔ Your result was sent to CLEO. You can close this page.",true); $("agree").disabled=true; }
+    else throw new Error(j.message||"failed");
+  }catch(e){
+    status("Could not send (no internet?). Press 'Send by email instead' or try again.",false);
+    $("send").disabled=false; $("mailbtn").classList.remove("hide");
+  }
+};
+$("mailbtn").onclick=()=>{ location.href=mailtoLink(); };
+$("print").onclick=()=>window.print();
+</script>
+</body>
+</html>
