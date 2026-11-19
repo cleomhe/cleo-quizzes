@@ -84,11 +84,40 @@ const VRAE = [
  ["General","Which country's national netball team is called the Diamonds?",["Australia","New Zealand","England","Jamaica"],0,"Australia."],
  ["General","Which country's national netball team is called the Silver Ferns?",["Australia","New Zealand","England","South Africa"],1,"New Zealand."],
  ["General","Which country's national netball team is called the Proteas?",["South Africa","Australia","Jamaica","England"],0,"South Africa (the SPAR Proteas)."],
- ["General","Which country has won the Netball World Cup the most times?",["England","South Africa","Australia","Jamaica"],2,"Australia, with the most titles by far."]
+ ["General","Which country has won the Netball World Cup the most times?",["England","South Africa","Australia","Jamaica"],2,"Australia, with the most titles by far."],
+ // ---- Tough Calls: what would the umpire call? ----
+ ["Tough Calls","A Wing Attack catches the ball and takes two steps before passing. What is the call?",["Stepping: free pass to the other team","Obstruction: penalty pass","Contact: penalty pass","Play on, 2 steps are allowed"],0,"Footwork errors (stepping) earn a free pass for the opposition. Penalty passes are for contact and obstruction."],
+ ["Tough Calls","A Goal Keeper stands 0.5 m from the Goal Shooter, who is holding the ball. What is the call?",["Obstruction: penalty to the attacking team","Offside: free pass","Play on","Held ball"],0,"A defender must be at least 0.9 m away from the player with the ball. Closer than that is obstruction."],
+ ["Tough Calls","A Wing Defence steps into the defending goal circle to intercept a pass. What is the call?",["Offside: free pass to the other team","Obstruction","Contact","Nothing, WD may enter the circle"],0,"Wing Defence is not allowed in the goal circle, so it is offside (out of area)."],
+ ["Tough Calls","A player passes the ball, then catches it again before anyone else has touched it. What is the call?",["Replay: free pass to the other team","Stepping","Held ball","Play on"],0,"A player may not play the ball again after releasing it until another player (or the goal post) has touched it. That is a replay."],
+ ["Tough Calls","A player holds the ball for 4 seconds before passing. What is the call?",["Held ball: free pass to the other team","Obstruction","Offside","Nothing, up to 5 seconds is fine"],0,"The limit is 3 seconds. Longer is a held ball."],
+ ["Tough Calls","Which infringement earns a PENALTY pass (not a free pass)?",["Contact","Stepping","Offside","Held ball"],0,"Contact and obstruction earn penalties. Stepping, offside, held ball and replay earn free passes."],
+ ["Tough Calls","Which infringement earns a FREE pass?",["Offside","Contact","Obstruction","None of these"],0,"Offside is a free pass. Contact and obstruction earn a penalty."],
+ ["Tough Calls","A shot hits the goal post and bounces back into play. What happens?",["Play continues","Centre pass","Throw-in","Penalty shot"],0,"Play simply continues. Anyone may play the rebound."],
+ ["Tough Calls","The umpire lets play go on after a small contact because the attacking team is not disadvantaged. What is this called?",["Playing advantage","Dropping the whistle","A free pass","A replay"],0,"The umpire is playing advantage."],
+ ["Tough Calls","Who can take a penalty SHOT at goal (instead of a pass)?",["Only a GS or GA who is inside the goal circle","Any attacking player","Only the Centre","Any player in the attacking third"],0,"Only a shooter (GS or GA) inside the goal circle may take a penalty shot; others take a pass."],
+ ["Tough Calls","When may a team normally make a substitution?",["At a break between quarters, or when a player is injured or ill","Whenever the coach wants","Only at half time","Only in the last quarter"],0,"At the intervals, or for injury or illness."],
+ ["Tough Calls","The ball goes out of court off a defender. Who gets the throw-in?",["The attacking team","The defending team","Whoever is closest","It's a toss-up"],0,"The team that did NOT last touch the ball. The defender touched it, so the attackers get the throw-in."],
+ // ---- Positions (harder) ----
+ ["Positions","Which ONE position may play in all three thirds of the court?",["Centre","Wing Attack","Goal Defence","Goal Attack"],0,"Only the Centre can enter every third (but not either goal circle)."],
+ ["Positions","Which two positions are restricted to just one third of the court?",["GS and GK","WA and WD","GA and GD","C and GS"],0,"Goal Shooter (attacking third) and Goal Keeper (defending third)."],
+ ["Positions","Which two positions may enter the attacking third but NOT the goal circle?",["WA and C","GA and GS","WD and GD","GK and GS"],0,"Wing Attack and Centre."],
+ ["Positions","Which defending position is NOT allowed in the centre third?",["Goal Keeper","Goal Defence","Wing Defence","Centre"],0,"Goal Keeper is limited to the defending third and circle."],
+ ["Positions","Which attacking position is allowed in the centre third AND the goal circle?",["Goal Attack","Goal Shooter","Wing Attack","Goal Keeper"],0,"Goal Attack plays the centre third and the attacking third, including the circle."],
+ // ---- The Court (harder) ----
+ ["The Court","What is the inside diameter of the goal ring?",["25 cm","38 cm","45 cm","60 cm"],1,"The ring is 38 cm (380 mm) across, a little bigger than the ball."],
+ ["The Court","About how long is each third of the court?",["8.5 m","10.2 m","12.2 m","15.25 m"],1,"30.5 m divided by 3 is about 10.2 m."],
+ ["The Court","What is the diameter of the centre circle?",["0.9 m","1.5 m","3 m","4.9 m"],0,"0.9 m, the same as the defending distance."],
+ ["The Court","How many players can a team have in its squad for a match?",["8","10","12","15"],2,"A squad of up to 12 (7 on court, the rest as substitutes)."],
+ // ---- General (harder) ----
+ ["General","In which year did netball make its debut at the Commonwealth Games?",["1978","1990","1998","2006"],2,"1998, in Kuala Lumpur."],
+ ["General","Which country won the 2019 Netball World Cup in Liverpool?",["Australia","New Zealand","England","Jamaica"],1,"New Zealand's Silver Ferns."],
+ ["General","Where and when was the first Netball World Championship held?",["Eastbourne, England, 1963","Sydney, 1975","Auckland, 1971","Cape Town, 1991"],0,"Eastbourne, England in 1963, won by Australia."],
+ ["General","Which country won the 2023 Netball World Cup in Cape Town?",["New Zealand","England","Australia","Jamaica"],2,"Australia."]
 ];
 /* ================================================================== */
 
-const KATS = ["The Basics","Positions","Rules","The Court","General"];
+const KATS = ["The Basics","Positions","Rules","The Court","General","Tough Calls"];
 const RONDE = 10;
 const app = document.getElementById("app");
 let rond, idx, punte, t0, gekies, foute, naam="";
