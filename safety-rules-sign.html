@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLEO Safety Rules - Read and Sign</title>
+<style>
+  :root{--navy:#1f3354;--orange:#f5a623;--bg:#f3f5f8;--card:#fff;--ink:#1d2433;--muted:#5d6678;--line:#d9dee7;--good:#1e7a46;--goodbg:#e6f4ec;--bad:#b3261e;--badbg:#fbe9e7}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  header{background:var(--card);border-bottom:4px solid var(--navy)}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
+  .head h1{margin:0;font-size:20px;color:var(--navy)}
+  .head p{margin:2px 0 0;color:var(--muted);font-size:13px;font-style:italic}
+  .logo{display:flex;align-items:center;gap:6px;flex-shrink:0}
+  .logo b{font:800 26px/1 "Arial Narrow",Arial,sans-serif;color:var(--navy);letter-spacing:1px}
+  main{padding:20px 16px 40px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:16px}
+  .bar{background:var(--navy);color:#fff;font-weight:700;font-size:13px;letter-spacing:.6px;text-transform:uppercase;padding:9px 14px;border-radius:6px;margin:0 0 16px;text-align:center}
+  label{display:block;font-weight:600;margin:14px 0 6px}
+  input[type=text]{width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;font-size:16px}
+  input[type=text]:focus{outline:2px solid var(--orange);border-color:var(--orange)}
+  .hint{font-size:13px;color:var(--muted);margin-top:4px}
+  .err{color:var(--bad);font-size:14px;margin-top:6px;min-height:1em}
+  button{font:inherit;cursor:pointer;border-radius:8px;border:0;padding:12px 18px;font-weight:700}
+  .btn{background:var(--navy);color:#fff;width:100%;margin-top:18px}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.alt{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+  .who{background:#eef1f5;border-radius:8px;padding:10px 14px;font-size:14px;margin-bottom:16px}
+  .sec{border-left:6px solid var(--orange);padding-left:14px;margin:26px 0 8px}
+  .sec h2{margin:0;font-size:19px;color:var(--navy);text-transform:uppercase;letter-spacing:.3px}
+  .sec p{margin:2px 0 0;color:var(--muted);font-size:14px}
+  .sub{font-weight:800;color:var(--navy);margin:18px 0 4px;font-size:15px;letter-spacing:.4px}
+  ol.rules{margin:4px 0 0;padding-left:0;list-style:none;counter-reset:r}
+  ol.rules li{counter-increment:r;position:relative;padding:9px 10px 9px 44px;border-bottom:1px solid var(--line)}
+  ol.rules li:before{content:counter(r);position:absolute;left:6px;top:9px;width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-size:13px;font-weight:700;text-align:center;line-height:26px}
+  p.txt{margin:8px 0;padding:6px 10px;border-bottom:1px solid var(--line)}
+  .warn{background:var(--badbg);border:2px solid var(--bad);color:#7a1a14;border-radius:8px;padding:12px 14px;margin:16px 0;font-weight:700}
+  .decl{background:#f3f4f6;border-left:4px solid var(--navy);padding:12px 14px;border-radius:4px;font-size:16px}
+  .check{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-weight:600}
+  .check input{width:24px;height:24px;margin-top:2px;flex-shrink:0}
+  #pad{width:100%;height:190px;border:2px dashed var(--navy);border-radius:8px;background:#fff;touch-action:none;display:block}
+  .padrow{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:15px;color:var(--ink);font-weight:600}
+  .padrow button{background:#fff;border:1px solid var(--line);padding:6px 12px;font-size:13px;font-weight:600}
+  .status{margin-top:12px;padding:12px;border-radius:8px;font-weight:600;display:none}
+  .status.show{display:block}.status.okk{background:var(--goodbg);color:var(--good)}.status.bad{background:var(--badbg);color:var(--bad)}
+  .hide{display:none}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:0 16px 30px}
+</style>
+</head>
+<body>
+<header><div class="wrap head">
+  <div><h1>GENERAL SAFETY RULES</h1><p>Read and sign · Lift truck operation · Accredited service provider · TETA05-139</p></div>
+  <div class="logo" aria-label="CLEO"><svg width="34" height="30" viewBox="0 0 34 30" aria-hidden="true"><polygon points="17,1 33,29 1,29" fill="#f5a623"/><text x="17" y="26" text-anchor="middle" font-family="Arial" font-weight="800" font-size="15" fill="#1f3354">C</text></svg><b>CLEO</b></div>
+</div></header>
+
+<main class="wrap">
+  <section id="s1" class="card">
+    <div class="bar">Your details</div>
+    <p>Please read the General Safety Rules on the next page. At the end you will sign to say you understand them and will follow them. Fill in all three fields first.</p>
+    <label for="name">Full name and surname</label>
+    <input id="name" type="text" autocomplete="name" placeholder="e.g. Thabo Mokoena">
+    <label for="idn">SA ID number</label>
+    <input id="idn" type="text" inputmode="numeric" maxlength="13" placeholder="13 digits">
+    <div class="hint">No spaces. Passport holders: type the passport number.</div>
+    <label for="site">Site name</label>
+    <input id="site" type="text" placeholder="e.g. Shoprite Centurion DC">
+    <div class="err" id="err1"></div>
+    <button class="btn" id="start">Continue to the rules</button>
+  </section>
+
+  <section id="s2" class="hide">
+    <div class="card">
+      <div class="who" id="who"></div>
+      <div class="bar">Read all the rules, then scroll to the bottom to sign</div>
+      <div id="rules"></div>
+    </div>
+    <div class="card" id="signcard">
+      <div class="bar">Declaration and signature</div>
+      <div class="decl"><b>DECLARATION</b><br>I acknowledge that I have received, read and understand the content of the General Safety Rules document, and undertake to comply with it at all times when operating a lifting machine.</div>
+      <label class="check"><input type="checkbox" id="agree" disabled> I have read all the rules and I agree with the declaration</label>
+      <div class="hint" id="lockhint">Scroll up and read all the rules first. The tick box opens when you reach this part.</div>
+      <label style="margin-top:18px">Sign with your finger in the box</label>
+      <canvas id="pad" width="900" height="285"></canvas>
+      <div class="padrow"><span id="when"></span><button id="clear" type="button">Clear signature</button></div>
+      <div class="err" id="err2"></div>
+      <button class="btn" id="send" disabled>Sign and send to CLEO</button>
+      <div class="status" id="status"></div>
+      <button class="btn alt hide" id="mailbtn">Send by email instead</button>
+    </div>
+  </section>
+</main>
+<footer>CLEO Accredited Training · General safety rules · Lifting machine / lift truck operation</footer>
+
+<script>
+const CONFIG = {
+  docTitle: "General Safety Rules",
+  rulesVersion: "General Safety Rules - Lifting machine / lift truck operation, 8 pages (TETA05-139)",
+  sendTo: "jolivier@mycleo.co.za",
+  web3formsKey: "2e1d3de6-f101-4465-bf9f-840e9de848c5"
+};
+
+/* ===== RULES (plain data; the PDF step reads this block too) ===== */
+const RULES = [
+{"h":"General safety rules","sub":"","blocks":[
+ {"t":"list","l":["NEVER permit unauthorised people to use the machine.","ALWAYS report any damage or defects promptly.","NEVER carry passengers on the machine.","Make sure the pre-operating and walk-round checks have been carried out before operating the machine.","ALWAYS keep your arms and legs within the driving compartment while the machine is in motion.","NEVER permit anyone to get underneath raised attachments.","ALWAYS perform a BRAKE TEST when starting off for the day's work, after the other checks have been done.","ALWAYS perform a STEERING TEST after successfully completing the brake test."]}]},
+{"h":"Driver protection","sub":"","blocks":[
+ {"t":"list","l":["Ensure that the operator wears the required personal protective equipment, as stipulated in the OHS Act and according to company policy.","Keep your head, hands and feet inside the operating compartment when operating.","Do not use a naked flame (for example a match) when checking fuel or battery levels.","Report to your supervisor immediately if there is any suspicion that a machine is defective or becoming unsafe.","Always park in a safe place before dismounting from the machine.","Do not remove any safety guards from the machine."]}]},
+{"h":"Protection of other personnel","sub":"","blocks":[
+ {"t":"list","l":["Never allow another person to hitch a ride - the lift truck is a one-person vehicle. DO NOT CARRY PASSENGERS.","Do not raise fellow workers on the machine. If anyone must be raised, a specially constructed safety pallet or platform with handrails must be used.","Always watch out for pedestrians - the load can obscure vision, so take appropriate action.","Others use the work area at the same time. Keep a lookout at all times and give way between stacks; people can step out without warning.","Do not allow bystanders to stand close by while operating.","Do not allow anyone to stand or pass under elevated attachments, whether loaded or not.","Always lower the attachments and retract them fully when parking the machine - attachments are not easily seen and can be a hazard to pedestrians."]}]},
+{"h":"Protection of property","sub":"","blocks":[
+ {"t":"list","l":["Do not bump into objects, especially when reversing - pallets, goods, factory products, fire extinguishers, other vehicles, etc. These items are valuable and costly.","Drive carefully in wet or slippery underfoot conditions, as skidding can easily occur. Report such conditions."]}]},
+{"h":"Working with batteries","sub":"","blocks":[
+ {"t":"list","l":["There must be NO naked lights near the battery.","NO metal objects may be allowed to short across the battery.","Spilling of battery water (battery acid) is dangerous.","Ensure that all connections are tight before moving the machine."]}]},
+{"h":"Operating","sub":"","blocks":[
+ {"t":"list","l":["Always look in the direction of travel. Avoid distractions.","Always operate at a safe speed and maintain a safe braking distance from other machines or hazards.","Drive carefully on wet and slippery surfaces - speed is dangerous.","Always ensure the load is within the rated capacity of the machine, and not overloaded.","Drive slowly around corners.","Do not speed.","Watch the rear-end swing of the machine.","Watch for pedestrians and workers while in motion."]}]},
+{"h":"Parking","sub":"","blocks":[
+ {"t":"list","l":["When leaving the machine, ensure the controls are in neutral, the power is switched off, the parking brake is applied and the ignition key is removed.","Park clear of emergency exits, doorways, staircases, fire points, etc.","Lower the attachments to the ground when the machine is parked.","Always park on a level surface."]}]},
+{"h":"3 meter rule","sub":"Reach truck operation - safe working distance","blocks":[
+ {"t":"list","l":["All employees must comply with a 3 meter rule at all times.","The Reach Truck Driver must ensure that NO staff operates in close proximity while conducting a Put Away or Let Down.","The Reach Truck Driver must be aware of his surroundings at all times and warn (sounding his horn) any employee that operates in an unsafe proximity of the Reach Truck.","In the event where an employee refuses to vacate the area, the Reach Truck Driver must STOP the operation and call a Supervisor to address the situation.","Any employee not complying with the 3 meter safe operating rule will be disciplined.","Any Reach Truck Driver that fails to comply with the 3 meter rule will be disciplined."]}]},
+{"h":"Safe operating practices","sub":"While operating the machine, the operator must:","blocks":[
+ {"t":"list","l":["Exercise extreme care when raising or lowering the attachments, especially at height, and avoid jerking.","Stay within the machine's rated capacity.","Lift the load slowly and cautiously.","Never travel with the load lifted high unless the application or circumstances dictate it.","Proceed slowly around corners.","Watch blind corners - slow down and sound the horn.","Watch out for unstable loads and piles.","Position loads evenly for proper balance.","Keep the load close to the ground and close to the machine.","Avoid sudden stops.","Do not carry passengers.","Keep arms and legs within the machine.","Shut off the engine and set the parking brake when leaving the machine.","Ensure all attachments are resting on the ground when the machine is parked.","Allow room for rear-end swing - do not cut corners.","Check overhead clearances.","Face in the direction of travel.","Use care when stacking and un-stacking loads.","Report damage or faulty operation immediately.","Lower loads slowly - avoid jerks or sudden stops.","Ensure the operator is authorised to operate the machine."]},
+ {"t":"sub","x":"Moving loads"},
+ {"t":"p","x":"Only handle loads within the rated capacity shown on the capacity plate. This rating represents the maximum load that can be lifted."},
+ {"t":"p","x":"Handle only stable loads. A load can contain unstable items that can easily shift and fall on someone. Do not handle the load if any loose part of it is above the load backrest extension, or if any part of the load is likely to fall."},
+ {"t":"p","x":"Centre the weight of the load between the forks. If the weight is not centred, the load can fall from the forks when you hit a bump or turn a corner, and an off-centre load increases the possibility of the lift truck tipping over sideways."}]},
+{"h":"Picking up and travelling with a load","sub":"","blocks":[
+ {"t":"sub","x":"Correct fork positioning"},
+ {"t":"p","x":"Always check the condition of the driving surface. Make sure the floor will support the weight of the lift truck and the load."},
+ {"t":"p","x":"Avoid fast starts - sudden movements can cause the lift truck to tilt. Approach the load carefully."},
+ {"t":"p","x":"Raise the forks to the proper height for engaging the load. Move forward slowly until the forks are positioned under the load. The forks must be at least two-thirds underneath the load."},
+ {"t":"p","x":"Make sure the load is centred between the forks; the fork tips should not extend beyond the load."},
+ {"t":"p","x":"If the load is being removed from a stack, move the lift truck away from the stack slowly."},
+ {"t":"p","x":"Always travel with the load as low as possible and tilted back. Lowering should be done slowly and smoothly."},
+ {"t":"p","x":"When lifting round objects, use a block behind the object. Tilt the upright forward so the forks can slide along the floor under the object to be lifted, then tilt the upright fully backward to help keep the load on the forks."},
+ {"t":"sub","x":"Travelling"},
+ {"t":"p","x":"When travelling with the load lowered, keep the load against the carriage and the upright fully back with the mast tilted backwards."},
+ {"t":"p","x":"Travel with the lift mechanism raised only enough to clear the ground or obstacles."},
+ {"t":"p","x":"For better visibility with large loads, travel with the load trailing, but always keep a proper lookout in the direction of travel. If visibility is obstructed, get a helper to look out for you."},
+ {"t":"p","x":"Use extra care at cross-aisles, doorways and other locations. Slow down when approaching blind intersections or turns, and sound the horn."},
+ {"t":"p","x":"Keep arms and legs inside the operator's compartment - they can be injured when passing obstructions."},
+ {"t":"p","x":"Avoid bumps, holes, slick spots and loose materials that may cause the lift truck to swerve or tip."}]},
+{"h":"General operating discipline","sub":"Surfaces, clearances and daily checks","blocks":[
+ {"t":"list","l":["Solid rubber tyre models are designed for relatively smooth, firm surfaces. Lift trucks with pneumatic tyres can adapt to more uneven ground.","Watch clearances, especially fork uprights, overhead guard and tail swing.","Do not indulge in stunt driving or horseplay.","Do not pass another lift truck travelling in the same direction at intersections, blind spots or other dangerous locations.","Under all conditions, operate the lift truck at a speed that allows it to be brought to a stop safely.","Carry out the daily (or shift) maintenance checks quickly but efficiently.","Report damage, defects and faulty truck performance immediately to your supervisor.","Do not drive with wet or greasy hands - they can slip on the wheel and cause loss of control.","Do not use a naked flame (for example a match) when checking fuel level or battery.","Report to your supervisor immediately if you suspect a lift truck is defective or becoming unsafe.","Always park in a safe place before dismounting.","Do not remove the canopy / head guard - it is installed for your protection.","Always look in the direction of travel. Avoid distractions.","Do not bump into objects, especially when reversing.","Always operate at a safe speed and maintain a safe braking distance from other trucks.","Drive carefully on wet or slippery floors, as skidding can easily occur. Report such conditions.","Keep left in aisles, take care when overtaking other lift trucks, and do not overtake at blind areas or other dangerous locations.","When working in enclosed areas, avoid the accumulation of fumes and gases caused by long periods of idling - if there is a wait, switch off."]},
+ {"t":"warn","x":"WARNING: NEVER TRAVEL WITH FORKS RAISED MORE THAN 150-200 mm FROM THE FLOOR. DO NOT OPERATE LIFT TRUCKS THAT NEED REPAIRS. REPORT A DEFECTIVE TRUCK, REMOVE THE KEY FROM THE SWITCH AND HAND IT TO THE SUPERVISOR."}]},
+{"h":"Stacking and de-stacking in racking","sub":"Step-by-step procedures","blocks":[
+ {"t":"sub","x":"Stacking procedure"},
+ {"t":"list","l":["Stop square to the rack.","Select neutral.","Tilt the mast (forks level).","Lift the mast to the required height.","Select forward direction.","Observe.","Move forward until the load is square on the rack, and stop.","Select neutral.","Lower the load until the forks are clear of the pallet.","Select reverse direction.","Observe.","Move the lift truck until you are clear of the racking.","Select neutral.","Lower the mast.","Tilt the mast back.","Select reverse direction.","Observe.","Move the lift truck to your next destination."]},
+ {"t":"sub","x":"De-stacking procedure"},
+ {"t":"list","l":["Stop square to the rack.","Select neutral.","Tilt the mast (forks level).","Lift the mast to the required height.","Select forward direction.","Observe.","Move forward until the load is at the heel of the fork, and stop.","Select neutral.","Lift the load until it clears the racking.","Select reverse direction.","Observe.","Move the lift truck until you are clear of the racking.","Select neutral.","Lower the mast.","Tilt the mast back.","Select reverse direction.","Observe.","Move the lift truck to your next destination."]}]}
+];
+
+const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let learner={}, signedSomething=false, reachedEnd=false;
+const today=()=>new Date().toLocaleDateString('en-ZA',{day:'2-digit',month:'long',year:'numeric'});
+
+function validSAID(id){ if(!/^\d{13}$/.test(id)) return false; let s=0; for(let i=0;i<13;i++){let d=+id[12-i]; if(i%2===1){d*=2; if(d>9)d-=9;} s+=d;} return s%10===0; }
+
+function buildRules(){
+  $("rules").innerHTML=RULES.map(s=>{
+    let h=`<div class="sec"><h2>${esc(s.h)}</h2>${s.sub?`<p>${esc(s.sub)}</p>`:""}</div>`;
+    s.blocks.forEach(b=>{
+      if(b.t==="list") h+=`<ol class="rules">${b.l.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`;
+      else if(b.t==="sub") h+=`<div class="sub">${esc(b.x.toUpperCase())}</div>`;
+      else if(b.t==="warn") h+=`<div class="warn">${esc(b.x)}</div>`;
+      else h+=`<p class="txt">${esc(b.x)}</p>`;
+    });
+    return h;
+  }).join("");
+}
+
+$("start").onclick=()=>{
+  const name=$("name").value.trim().replace(/\s+/g," "), idn=$("idn").value.replace(/\s/g,""), site=$("site").value.trim();
+  if(name.split(" ").length<2){ $("err1").textContent="Please type your name and surname."; return; }
+  const isSA=/^\d+$/.test(idn);
+  if(isSA&&!validSAID(idn)){ $("err1").textContent="That SA ID number is not valid. Check all 13 digits."; return; }
+  if(!isSA&&idn.length<6){ $("err1").textContent="Please type your ID or passport number."; return; }
+  if(site.length<2){ $("err1").textContent="Please type the site name."; return; }
+  learner={name,id:idn,site};
+  $("who").innerHTML=`<b>${esc(name)}</b> · ${esc(idn)} · ${esc(site)} · ${today()}`;
+  buildRules();
+  $("s1").classList.add("hide"); $("s2").classList.remove("hide");
+  window.scrollTo({top:0});
+  new IntersectionObserver((e,o)=>{ if(e[0].isIntersecting){ reachedEnd=true; $("agree").disabled=false; $("lockhint").textContent="Tick the box, then sign below."; o.disconnect(); } },{threshold:0.2}).observe($("signcard"));
+  $("when").textContent="Date: "+today();
+};
+
+/* signature pad */
+const pad=$("pad"), ctx=pad.getContext("2d"); let drawing=false,last=null;
+ctx.lineWidth=5; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.strokeStyle="#111"; ctx.fillStyle="#111";
+function pos(e){ const r=pad.getBoundingClientRect(); return {x:(e.clientX-r.left)*pad.width/r.width,y:(e.clientY-r.top)*pad.height/r.height}; }
+pad.addEventListener("pointerdown",e=>{ drawing=true; last=pos(e); pad.setPointerCapture(e.pointerId); ctx.beginPath(); ctx.arc(last.x,last.y,2.5,0,6.3); ctx.fill(); signedSomething=true; update(); e.preventDefault(); });
+pad.addEventListener("pointermove",e=>{ if(!drawing)return; const p=pos(e); ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke(); last=p; e.preventDefault(); });
+["pointerup","pointercancel","pointerleave"].forEach(ev=>pad.addEventListener(ev,()=>{drawing=false;}));
+$("clear").onclick=()=>{ ctx.clearRect(0,0,pad.width,pad.height); signedSomething=false; update(); };
+function update(){ $("send").disabled=!($("agree").checked&&signedSomething&&reachedEnd); }
+$("agree").onchange=update;
+
+function sigData(){
+  const c=document.createElement("canvas"); c.width=450; c.height=143; const x=c.getContext("2d");
+  x.fillStyle="#fff"; x.fillRect(0,0,c.width,c.height); x.drawImage(pad,0,0,c.width,c.height);
+  return c.toDataURL("image/jpeg",0.7);
+}
+function reportText(sig){
+  return ["CLEO "+CONFIG.docTitle.toUpperCase()+" – SIGNED DECLARATION","",
+   "Name: "+learner.name,"ID / passport: "+learner.id,"Company / site: "+learner.site,
+   "Date signed: "+today(),"Signed: "+new Date().toLocaleString('en-ZA'),"Declaration accepted: YES",
+   "Rules read: "+CONFIG.rulesVersion,"Signature: "+sig].join("\n");
+}
+function status(m,ok){ const s=$("status"); s.textContent=m; s.className="status show "+(ok?"okk":"bad"); }
+$("send").onclick=async()=>{
+  $("send").disabled=true; status("Sending…",true);
+  const text=reportText(sigData());
+  try{
+    const res=await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},
+      body:JSON.stringify({access_key:CONFIG.web3formsKey,subject:"CLEO safety rules signed – "+learner.name,from_name:"CLEO Safety Rules",
+        name:learner.name,id_number:learner.id,site:learner.site,message:text})});
+    const j=await res.json();
+    if(j.success){ status("✔ Thank you. Your signed declaration was sent to CLEO. You can close this page.",true); $("agree").disabled=true; $("clear").disabled=true; }
+    else throw new Error(j.message||"failed");
+  }catch(e){
+    status("Could not send (no internet?). Try again, or press 'Send by email instead'.",false);
+    $("send").disabled=false; $("mailbtn").classList.remove("hide");
+  }
+};
+$("mailbtn").onclick=()=>{ const t=reportText("(sign the printed copy)"); location.href="mailto:"+CONFIG.sendTo+"?subject="+encodeURIComponent("CLEO safety rules signed – "+learner.name)+"&body="+encodeURIComponent(t); };
+</script>
+</body>
+</html>
