@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLEO TMC Safety Rules - Read and Sign</title>
+<style>
+  :root{--navy:#1f3354;--orange:#f5a623;--bg:#f3f5f8;--card:#fff;--ink:#1d2433;--muted:#5d6678;--line:#d9dee7;--good:#1e7a46;--goodbg:#e6f4ec;--bad:#b3261e;--badbg:#fbe9e7}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  header{background:var(--card);border-bottom:4px solid var(--navy)}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
+  .head h1{margin:0;font-size:20px;color:var(--navy)}
+  .head p{margin:2px 0 0;color:var(--muted);font-size:13px;font-style:italic}
+  .logo{display:flex;align-items:center;gap:6px;flex-shrink:0}
+  .logo b{font:800 26px/1 "Arial Narrow",Arial,sans-serif;color:var(--navy);letter-spacing:1px}
+  main{padding:20px 16px 40px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:16px}
+  .bar{background:var(--navy);color:#fff;font-weight:700;font-size:13px;letter-spacing:.6px;text-transform:uppercase;padding:9px 14px;border-radius:6px;margin:0 0 16px;text-align:center}
+  label{display:block;font-weight:600;margin:14px 0 6px}
+  input[type=text]{width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;font-size:16px}
+  input[type=text]:focus{outline:2px solid var(--orange);border-color:var(--orange)}
+  .hint{font-size:13px;color:var(--muted);margin-top:4px}
+  .err{color:var(--bad);font-size:14px;margin-top:6px;min-height:1em}
+  button{font:inherit;cursor:pointer;border-radius:8px;border:0;padding:12px 18px;font-weight:700}
+  .btn{background:var(--navy);color:#fff;width:100%;margin-top:18px}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.alt{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+  .who{background:#eef1f5;border-radius:8px;padding:10px 14px;font-size:14px;margin-bottom:16px}
+  .sec{border-left:6px solid var(--orange);padding-left:14px;margin:26px 0 8px}
+  .sec h2{margin:0;font-size:19px;color:var(--navy);text-transform:uppercase;letter-spacing:.3px}
+  .sec p{margin:2px 0 0;color:var(--muted);font-size:14px}
+  .sub{font-weight:800;color:var(--navy);margin:18px 0 4px;font-size:15px;letter-spacing:.4px}
+  ol.rules{margin:4px 0 0;padding-left:0;list-style:none;counter-reset:r}
+  ol.rules li{counter-increment:r;position:relative;padding:9px 10px 9px 44px;border-bottom:1px solid var(--line)}
+  ol.rules li:before{content:counter(r);position:absolute;left:6px;top:9px;width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-size:13px;font-weight:700;text-align:center;line-height:26px}
+  p.txt{margin:8px 0;padding:6px 10px;border-bottom:1px solid var(--line)}
+  .warn{background:var(--badbg);border:2px solid var(--bad);color:#7a1a14;border-radius:8px;padding:12px 14px;margin:16px 0;font-weight:700}
+  .decl{background:#f3f4f6;border-left:4px solid var(--navy);padding:12px 14px;border-radius:4px;font-size:16px}
+  .check{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-weight:600}
+  .check input{width:24px;height:24px;margin-top:2px;flex-shrink:0}
+  #pad{width:100%;height:190px;border:2px dashed var(--navy);border-radius:8px;background:#fff;touch-action:none;display:block}
+  .padrow{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:15px;color:var(--ink);font-weight:600}
+  .padrow button{background:#fff;border:1px solid var(--line);padding:6px 12px;font-size:13px;font-weight:600}
+  .status{margin-top:12px;padding:12px;border-radius:8px;font-weight:600;display:none}
+  .status.show{display:block}.status.okk{background:var(--goodbg);color:var(--good)}.status.bad{background:var(--badbg);color:var(--bad)}
+  .hide{display:none}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:0 16px 30px}
+</style>
+</head>
+<body>
+<header><div class="wrap head">
+  <div><h1>TMC SAFETY RULES</h1><p>Read and sign · Truck mounted crane, rigging &amp; slinging · Accredited service provider · TETA05-139</p></div>
+  <div class="logo" aria-label="CLEO"><svg width="34" height="30" viewBox="0 0 34 30" aria-hidden="true"><polygon points="17,1 33,29 1,29" fill="#f5a623"/><text x="17" y="26" text-anchor="middle" font-family="Arial" font-weight="800" font-size="15" fill="#1f3354">C</text></svg><b>CLEO</b></div>
+</div></header>
+
+<main class="wrap">
+  <section id="s1" class="card">
+    <div class="bar">Your details</div>
+    <p>Please read the Truck Mounted Crane Safety Rules (with rigging and slinging) on the next page. At the end you will sign to say you understand them and will follow them. Fill in all three fields first.</p>
+    <label for="name">Full name and surname</label>
+    <input id="name" type="text" autocomplete="name" placeholder="e.g. Thabo Mokoena">
+    <label for="idn">SA ID number</label>
+    <input id="idn" type="text" inputmode="numeric" maxlength="13" placeholder="13 digits">
+    <div class="hint">No spaces. Passport holders: type the passport number.</div>
+    <label for="site">Site name</label>
+    <input id="site" type="text" placeholder="e.g. Shoprite Centurion DC">
+    <div class="err" id="err1"></div>
+    <button class="btn" id="start">Continue to the rules</button>
+  </section>
+
+  <section id="s2" class="hide">
+    <div class="card">
+      <div class="who" id="who"></div>
+      <div class="bar">Read all the rules, then scroll to the bottom to sign</div>
+      <div id="rules"></div>
+    </div>
+    <div class="card" id="signcard">
+      <div class="bar">Declaration and signature</div>
+      <div class="decl"><b>DECLARATION</b><br>I acknowledge that I have received, read and understand the content of the Truck Mounted Crane Safety Rules document, including rigging and slinging, and undertake to comply with it at all times when operating a crane or slinging a load.</div>
+      <label class="check"><input type="checkbox" id="agree" disabled> I have read all the rules and I agree with the declaration</label>
+      <div class="hint" id="lockhint">Scroll up and read all the rules first. The tick box opens when you reach this part.</div>
+      <label style="margin-top:18px">Sign with your finger in the box</label>
+      <canvas id="pad" width="900" height="285"></canvas>
+      <div class="padrow"><span id="when"></span><button id="clear" type="button">Clear signature</button></div>
+      <div class="err" id="err2"></div>
+      <button class="btn" id="send" disabled>Sign and send to CLEO</button>
+      <div class="status" id="status"></div>
+      <button class="btn alt hide" id="mailbtn">Send by email instead</button>
+    </div>
+  </section>
+</main>
+<footer>CLEO Accredited Training · Truck mounted crane safety · Rigging &amp; slinging</footer>
+
+<script>
+const CONFIG = {
+  docTitle: "TMC Safety Rules",
+  rulesVersion: "TMC Safety Rules - Truck mounted crane, rigging and slinging (TETA05-139)",
+  sendTo: "jolivier@mycleo.co.za",
+  web3formsKey: "2e1d3de6-f101-4465-bf9f-840e9de848c5"
+};
+
+/* ===== RULES (plain data; the PDF step reads this block too) ===== */
+const RULES = [
+{"h": "Your duties and the law", "sub": "Occupational Health and Safety Act 85 of 1993 and Driven Machinery Regulation 18 (lifting machines)", "blocks": [{"t": "list", "l": ["Only a trained, certified and authorised person may operate the crane. NEVER operate a crane you are not certified for.", "Every lifting machine must be operated by an operator trained for that type of machine.", "Nobody may be lifted or carried by the crane, the hook or the load, unless it has a cradle approved for that purpose.", "You must be fit and alert. If you are physically or otherwise unfit, do not operate or sling. It is an offence to be intoxicated at the workplace or near moving machinery.", "Report every unsafe condition, defect and incident to your supervisor at once and record it in the logbook.", "If you are in doubt about stability, the mechanical condition of the crane or the lifting equipment, STOP and report it."]}]},
+{"h": "PPE", "sub": "No PPE, no work", "blocks": [{"t": "list", "l": ["Wear overalls, a hard hat, safety boots and gloves, plus safety glasses or a face shield and ear protection where the job needs them.", "The employer must supply PPE free of charge, and you must look after it and report any defect immediately.", "Inspect your hard hat for cracks before use. NEVER paint it: paint solvents soften the shell and paint hides cracks.", "Keep boot laces tied. Visitors must also wear safety shoes and the necessary protection."]}]},
+{"h": "Pre-operating checks", "sub": "Do the checks before you leave the depot. It is too late on site.", "blocks": [{"t": "list", "l": ["On approach, look under the vehicle for fluid leaks and obstructions. Check what fluid it is, where it comes from, wipe the source clean and see if it drips again.", "Work through the vehicle check sheet and the 17-item crane check sheet. Tick only what you have actually checked.", "Check the licence disc and the roadworthy (fitness) disc. Both must be displayed and in date at all times.", "Check the crane: securing bolts, hydraulic oil tank and level, hoses, valve bank and levers, cylinders, mast, main boom, telescopic booms, hook, outriggers, information plate and range diagram.", "Start the engine for no longer than 10 seconds at a time and let the starter cool for 2 minutes. Warm up at idle for about 5 minutes and watch the gauges.", "Do the brake test, the park brake test and the steering test before you rely on them.", "Found a defect? Cross it on the check sheet and report it immediately. Do not use a crane that needs repairs. Hand in check sheets daily.", "Operators do the checks. All maintenance, servicing and parts replacement is done by competent technical personnel."]}]},
+{"h": "Setting up the crane", "sub": "The vehicle engine, PTO and outriggers", "blocks": [{"t": "list", "l": ["For the crane to work ALL of these must be true: the engine is running, the gear selector is in neutral, the park brake is applied and the PTO is engaged.", "Extend the outriggers BEFORE you raise the main boom. Put them on firm, good ground and use strong blocks so they cannot sink.", "Blocks and outrigger feet must be at 90 degrees to the outrigger cylinder. Fully extend the outriggers and make sure the crane is level.", "Check the outriggers, floats and packing from time to time while you work.", "Look at the range diagram for your crane before every lift. It gives the safe boom length and radius.", "Know the capacity of the crane and the true mass of the load. NEVER overload the crane.", "Pack up in the reverse order: lower the telescopic booms, lower and refold the main boom, retract the outriggers, disengage the PTO, then switch off."]}]},
+{"h": "Lifting safely", "sub": "Before, during and after the lift", "blocks": [{"t": "sub", "x": "Before the lift"}, {"t": "list", "l": ["Check the weight, height and radius of the lift against the chart for your crane. Measure the radius properly.", "Find the centre of gravity and put the hook directly above it.", "Check the slinging is adequate and secure. Remove or tie down loose objects. Use taglines on long or awkward loads.", "Make sure the load is free (not bolted or tied down) and the landing place and route are clear.", "Warn everybody who is not part of the lift to leave the area."]}, {"t": "sub", "x": "During the lift"}, {"t": "list", "l": ["Lift a few centimetres first and check the hold. NEVER test the capacity of the crane against its stability.", "Lift smoothly. Jerking causes impact loading. Avoid sudden stops when you slew.", "NEVER drag a load into radius. The crane lifts vertically. Dragging overstresses the boom and can cause a structural or stability failure.", "Keep the load close to the vehicle and close to the ground. Do not let it strike the boom or the outriggers.", "NEVER lift a load over people and never let anyone ride on a suspended load or on the crane.", "NEVER leave the controls while a load is suspended. Land the load and follow the shut-down procedure before you leave the crane.", "When loading or unloading a truck, the driver leaves the cab and you work over the rear. Do not swing over the cab.", "Once the load is off the ground you are responsible for the load and the crane. Eyes on the load at all times."]}, {"t": "sub", "x": "Landing the load"}, {"t": "list", "l": ["Land the load on adequate blocking (timber battens) before you unhook and unsling.", "Never pull a sling out from under a load while it is resting on the sling."]}]},
+{"h": "Signals and communication", "sub": "", "blocks": [{"t": "list", "l": ["Know who is in charge of the lift. The operator obeys signals ONLY from that appointed person (the slinger or signaller).", "The operator must react to a STOP signal from anyone, at any time.", "Agree the signals before the lift. Signals must be clear and given from a place where the operator can see you.", "If you are unsure what a signal means, STOP. Never ignore a signal and never take a chance.", "If your view is blocked, use a signaller.", "Take extreme care when two or more cranes share a lift."]}]},
+{"h": "Wind, power lines and the road", "sub": "", "blocks": [{"t": "list", "l": ["Wind reduces the rated capacity of the crane. Load charts do not allow for wind on the crane or on the load. Avoid loads with a large surface area and postpone the lift in strong wind.", "Assume overhead power lines are live unless a competent person confirms in writing that they are dead. Keep at least 8 metres away and allow for sag and sway. The boom does not have to touch a line: current can flash over.", "If the crane touches a power line: warn everybody to stay away, because the machine, the load and the ground are hot. Try to move away the opposite way you came in. If the ropes look welded to the line, stay put. Wait for the authority to de-energise the line, then report the incident and inspect the crane.", "Before you drive away, make sure the booms are stowed and the load is secured, and that the truck is roadworthy and legal for the public road. You are responsible for the vehicle once it leaves the yard."]}]},
+{"h": "Rigging and slinging", "sub": "Slinging must be done by a responsible person who pays attention to detail", "blocks": [{"t": "sub", "x": "The five questions before every lift"}, {"t": "list", "l": ["What does the load weigh and where is its centre of gravity?", "Is every item of tackle in good condition, marked with its SWL and within its inspection date?", "Is the sling type, method and angle right for this load?", "Is the area clear, the route planned and the signaller agreed?", "Have I lifted slightly to check the balance before lifting fully?"]}, {"t": "sub", "x": "Slings and angles"}, {"t": "list", "l": ["Everything below the hook counts as load: slings, shackles and lifting beams add to the weight.", "As the angle between the legs of a sling gets bigger, the load in each leg goes up. Keep the included angle at 90 degrees or less. NEVER go beyond 120 degrees.", "Quick check: the length of the sling leg must be longer than the distance between the lifting points. Never force the eye down.", "Use multi-leg slings where one sling cannot lift the load balanced and secure. Put the legs at equal distances from the centre of the load.", "A choke hitch reduces the SWL. Never hook the sling back onto its own leg.", "Unused sling legs must be hooked back onto the master link."]}, {"t": "sub", "x": "Wire rope, chain, webbing and fittings"}, {"t": "list", "l": ["NEVER knot or twist a sling or chain to shorten it. Use shortening clutches for chain.", "Pad sharp edges and corners. Use thimbles in wire rope eyes.", "The load must sit in the bowl of the hook, never on the tip. Hooks point outwards, and the safety catch must be latched.", "Shackles: use the correct pin screwed fully home. NEVER replace a pin with a bolt. Keep the load centred.", "A plain eye bolt is for vertical lifts only. Use shoulder (collar) eye bolts for angled lifts and reduce the working load for the angle of pull.", "Never tip-load a hook and never lower a load onto a sling.", "No sudden acceleration or deceleration and no side pulls. No passengers on the load."]}, {"t": "sub", "x": "Inspect every sling before every use"}, {"t": "list", "l": ["Wire rope: SWL, broken wires, core failure, kinks, rust, wear and the condition of the splice.", "Chain: SWL, cracks, rust, wear, stretched or bent links, butt welds and hammer locks.", "Webbing: SWL, cuts, abrasion, holes, acid and heat burns, stitching and broken fibres.", "Eye bolts and shackles: SWL, cracks, wear, bent or stretched parts, pin straightness and thread.", "A sling with no SWL tag, or one that is worn, kinked, corroded or stretched, must be taken out of service. An unfit sling must be destroyed or repaired by a competent person, not just thrown on a hook or the floor.", "A competent person must examine all lifting tackle at least every three months and enter the result in a signed register.", "Store slings on a rack, hung straight and off the ground. Return everything to the store."]}, {"t": "sub", "x": "Stay safe around the load"}, {"t": "list", "l": ["Stand at least 5 metres from a suspended load, or have an escape route. Never turn your back on it.", "Never stand under or beside the load.", "If the base of the load is above waist level, use a tagline.", "Keep your hands away from pinch points and out of the sling when the load is taking the weight."]}]},
+{"h": "Parking and shutting down", "sub": "", "blocks": [{"t": "list", "l": ["Land the load and stow the crane (booms in, outriggers retracted) before you leave it.", "Disengage the PTO, apply the park brake, switch off and remove the key.", "Park on a level surface and clear of emergency exits, doorways and fire points.", "Shut down and secure the crane whenever it is unattended."]}, {"t": "warn", "x": "WARNING: NEVER OPERATE A CRANE THAT NEEDS REPAIRS. REPORT THE DEFECT, TAG THE CRANE OUT AND HAND THE KEY TO THE SUPERVISOR. NEVER STAND UNDER A SUSPENDED LOAD."}]}
+];
+
+const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let learner={}, signedSomething=false, reachedEnd=false;
+const today=()=>new Date().toLocaleDateString('en-ZA',{day:'2-digit',month:'long',year:'numeric'});
+
+function validSAID(id){ if(!/^\d{13}$/.test(id)) return false; let s=0; for(let i=0;i<13;i++){let d=+id[12-i]; if(i%2===1){d*=2; if(d>9)d-=9;} s+=d;} return s%10===0; }
+
+function buildRules(){
+  $("rules").innerHTML=RULES.map(s=>{
+    let h=`<div class="sec"><h2>${esc(s.h)}</h2>${s.sub?`<p>${esc(s.sub)}</p>`:""}</div>`;
+    s.blocks.forEach(b=>{
+      if(b.t==="list") h+=`<ol class="rules">${b.l.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`;
+      else if(b.t==="sub") h+=`<div class="sub">${esc(b.x.toUpperCase())}</div>`;
+      else if(b.t==="warn") h+=`<div class="warn">${esc(b.x)}</div>`;
+      else h+=`<p class="txt">${esc(b.x)}</p>`;
+    });
+    return h;
+  }).join("");
+}
+
+$("start").onclick=()=>{
+  const name=$("name").value.trim().replace(/\s+/g," "), idn=$("idn").value.replace(/\s/g,""), site=$("site").value.trim();
+  if(name.split(" ").length<2){ $("err1").textContent="Please type your name and surname."; return; }
+  const isSA=/^\d+$/.test(idn);
+  if(isSA&&!validSAID(idn)){ $("err1").textContent="That SA ID number is not valid. Check all 13 digits."; return; }
+  if(!isSA&&idn.length<6){ $("err1").textContent="Please type your ID or passport number."; return; }
+  if(site.length<2){ $("err1").textContent="Please type the site name."; return; }
+  learner={name,id:idn,site};
+  $("who").innerHTML=`<b>${esc(name)}</b> · ${esc(idn)} · ${esc(site)} · ${today()}`;
+  buildRules();
+  $("s1").classList.add("hide"); $("s2").classList.remove("hide");
+  window.scrollTo({top:0});
+  new IntersectionObserver((e,o)=>{ if(e[0].isIntersecting){ reachedEnd=true; $("agree").disabled=false; $("lockhint").textContent="Tick the box, then sign below."; o.disconnect(); } },{threshold:0.2}).observe($("signcard"));
+  $("when").textContent="Date: "+today();
+};
+
+/* signature pad */
+const pad=$("pad"), ctx=pad.getContext("2d"); let drawing=false,last=null;
+ctx.lineWidth=5; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.strokeStyle="#111"; ctx.fillStyle="#111";
+function pos(e){ const r=pad.getBoundingClientRect(); return {x:(e.clientX-r.left)*pad.width/r.width,y:(e.clientY-r.top)*pad.height/r.height}; }
+pad.addEventListener("pointerdown",e=>{ drawing=true; last=pos(e); pad.setPointerCapture(e.pointerId); ctx.beginPath(); ctx.arc(last.x,last.y,2.5,0,6.3); ctx.fill(); signedSomething=true; update(); e.preventDefault(); });
+pad.addEventListener("pointermove",e=>{ if(!drawing)return; const p=pos(e); ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke(); last=p; e.preventDefault(); });
+["pointerup","pointercancel","pointerleave"].forEach(ev=>pad.addEventListener(ev,()=>{drawing=false;}));
+$("clear").onclick=()=>{ ctx.clearRect(0,0,pad.width,pad.height); signedSomething=false; update(); };
+function update(){ $("send").disabled=!($("agree").checked&&signedSomething&&reachedEnd); }
+$("agree").onchange=update;
+
+function sigData(){
+  const c=document.createElement("canvas"); c.width=450; c.height=143; const x=c.getContext("2d");
+  x.fillStyle="#fff"; x.fillRect(0,0,c.width,c.height); x.drawImage(pad,0,0,c.width,c.height);
+  return c.toDataURL("image/jpeg",0.7);
+}
+function reportText(sig){
+  return ["CLEO "+CONFIG.docTitle.toUpperCase()+" – SIGNED DECLARATION","",
+   "Name: "+learner.name,"ID / passport: "+learner.id,"Company / site: "+learner.site,
+   "Date signed: "+today(),"Signed: "+new Date().toLocaleString('en-ZA'),"Declaration accepted: YES",
+   "Rules read: "+CONFIG.rulesVersion,"Signature: "+sig].join("\n");
+}
+function status(m,ok){ const s=$("status"); s.textContent=m; s.className="status show "+(ok?"okk":"bad"); }
+$("send").onclick=async()=>{
+  $("send").disabled=true; status("Sending…",true);
+  const text=reportText(sigData());
+  try{
+    const res=await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},
+      body:JSON.stringify({access_key:CONFIG.web3formsKey,subject:"CLEO safety rules signed – "+learner.name,from_name:"CLEO Safety Rules",
+        name:learner.name,id_number:learner.id,site:learner.site,message:text})});
+    const j=await res.json();
+    if(j.success){ status("✔ Thank you. Your signed declaration was sent to CLEO. You can close this page.",true); $("agree").disabled=true; $("clear").disabled=true; }
+    else throw new Error(j.message||"failed");
+  }catch(e){
+    status("Could not send (no internet?). Try again, or press 'Send by email instead'.",false);
+    $("send").disabled=false; $("mailbtn").classList.remove("hide");
+  }
+};
+$("mailbtn").onclick=()=>{ const t=reportText("(sign the printed copy)"); location.href="mailto:"+CONFIG.sendTo+"?subject="+encodeURIComponent("CLEO safety rules signed – "+learner.name)+"&body="+encodeURIComponent(t); };
+</script>
+</body>
+</html>
