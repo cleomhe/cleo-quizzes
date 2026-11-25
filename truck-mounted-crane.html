@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLEO TMC Quiz</title>
+<style>
+  :root{
+    --navy:#1f3354; --orange:#f5a623; --bg:#f3f5f8; --card:#ffffff; --ink:#1d2433; --muted:#5d6678;
+    --line:#d9dee7; --good:#1e7a46; --goodbg:#e6f4ec; --bad:#b3261e; --badbg:#fbe9e7;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  header{background:var(--card);border-bottom:4px solid var(--navy)}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
+  .head h1{margin:0;font-size:20px;color:var(--navy);letter-spacing:.3px}
+  .head p{margin:2px 0 0;color:var(--muted);font-size:13px;font-style:italic}
+  .logo{display:flex;align-items:center;gap:6px;flex-shrink:0}
+  .logo b{font:800 26px/1 "Arial Narrow",Arial,sans-serif;color:var(--navy);letter-spacing:1px}
+  main{padding:20px 16px 40px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:16px}
+  .bar{background:var(--navy);color:#fff;font-weight:700;font-size:13px;letter-spacing:.6px;text-transform:uppercase;padding:9px 14px;border-radius:6px;margin:-4px 0 16px;text-align:center}
+  label{display:block;font-weight:600;margin:14px 0 6px}
+  input[type=text]{width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;font-size:16px}
+  input[type=text]:focus{outline:2px solid var(--orange);border-color:var(--orange)}
+  .hint{font-size:13px;color:var(--muted);margin-top:4px}
+  .err{color:var(--bad);font-size:14px;margin-top:6px;min-height:1em}
+  button{font:inherit;cursor:pointer;border-radius:8px;border:0;padding:12px 18px;font-weight:700}
+  .btn{background:var(--navy);color:#fff;width:100%;margin-top:18px}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.alt{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+  .progress{height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:6px}
+  .progress span{display:block;height:100%;background:var(--orange);width:0;transition:width .3s}
+  .meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:14px}
+  .q{font-size:18px;font-weight:700;margin:0 0 14px}
+  .opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);color:var(--ink);font-weight:500;margin:8px 0;padding:12px 14px}
+  .opt:hover:not(:disabled){border-color:var(--navy)}
+  .opt.right{border-color:var(--good);background:var(--goodbg)}
+  .opt.wrong{border-color:var(--bad);background:var(--badbg)}
+  .opt:disabled{cursor:default}
+  .why{margin-top:14px;padding:12px 14px;border-left:4px solid var(--navy);background:#f1f4f9;border-radius:4px;display:none}
+  .why.show{display:block}
+  .why h3{margin:0 0 4px;font-size:15px}
+  .why .ok{color:var(--good)} .why .no{color:var(--bad)}
+  .why p{margin:4px 0 0}
+  .why small{display:block;color:var(--muted);margin-top:6px}
+  .score{font-size:44px;font-weight:800;color:var(--navy);text-align:center;margin:4px 0}
+  .verdict{text-align:center;font-weight:700;font-size:18px;margin-bottom:6px}
+  .pass{color:var(--good)} .fail{color:var(--bad)}
+  .decl{background:#f3f4f6;border-left:4px solid var(--navy);padding:12px 14px;border-radius:4px;font-size:15px}
+  .check{display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-weight:500}
+  .check input{width:22px;height:22px;margin-top:2px;flex-shrink:0}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+  th{background:var(--navy);color:#fff}
+  .status{margin-top:12px;padding:12px;border-radius:8px;font-weight:600;display:none}
+  .status.show{display:block}
+  .status.okk{background:var(--goodbg);color:var(--good)}
+  .status.bad{background:var(--badbg);color:var(--bad)}
+  .hide{display:none}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:0 16px 30px}
+  @media print{
+    header,.btn,.noprint,footer{display:none!important}
+    body{background:#fff}.card{border:0;padding:0}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap head">
+    <div>
+      <h1>TRUCK MOUNTED CRANE (TMC)</h1>
+      <p>Unit standard 242978 · Includes rigging &amp; slinging · Accredited service provider · TETA05-139</p>
+    </div>
+    <div class="logo" aria-label="CLEO">
+      <svg width="34" height="30" viewBox="0 0 34 30" aria-hidden="true"><polygon points="17,1 33,29 1,29" fill="#f5a623"/><text x="17" y="26" text-anchor="middle" font-family="Arial" font-weight="800" font-size="15" fill="#1f3354">C</text></svg>
+      <b>CLEO</b>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- STEP 1: details -->
+  <section id="s1" class="card">
+    <div class="bar">Learner details</div>
+    <p>Answer the questions on truck mounted crane safety, including rigging and slinging, from the TMC learner handout and the rigging and slinging notes. After each answer you will see the correct answer and <b>why</b>. Your first answer counts. When you finish, your result is sent to CLEO.</p>
+    <label for="name">Full name and surname</label>
+    <input id="name" type="text" autocomplete="name" placeholder="e.g. Thabo Mokoena">
+    <label for="idn">SA ID number</label>
+    <input id="idn" type="text" inputmode="numeric" maxlength="13" placeholder="13 digits">
+    <div class="hint">No spaces. Passport holders: type the passport number.</div>
+    <label for="site">Company / site (optional)</label>
+    <input id="site" type="text" placeholder="e.g. Shoprite Centurion DC">
+    <div class="err" id="err1"></div>
+    <button class="btn" id="start">Start the questions</button>
+  </section>
+
+  <!-- STEP 2: questions -->
+  <section id="s2" class="card hide">
+    <div class="progress"><span id="prog"></span></div>
+    <div class="meta"><span id="count"></span><span id="section"></span></div>
+    <p class="q" id="qtext"></p>
+    <div id="opts"></div>
+    <div class="why" id="why"></div>
+    <button class="btn" id="next" disabled>Next question</button>
+  </section>
+
+  <!-- STEP 3: result + declaration -->
+  <section id="s3" class="card hide">
+    <div class="bar">Your result</div>
+    <div class="score" id="score"></div>
+    <div class="verdict" id="verdict"></div>
+    <p style="text-align:center;color:var(--muted);margin-top:0" id="who"></p>
+
+    <div class="noprint">
+      <div class="decl"><b>DECLARATION</b><br>I acknowledge that I have received, read and understand the truck mounted crane safety rules and the rigging and slinging rules, and undertake to apply them at all times when operating a crane or slinging a load.</div>
+      <label class="check"><input type="checkbox" id="agree"> I agree with the declaration above</label>
+      <button class="btn" id="send" disabled>Submit my result to CLEO</button>
+      <div class="status" id="status"></div>
+      <button class="btn alt hide" id="mailbtn">Send by email instead</button>
+      <button class="btn alt" id="print">Save / print my result</button>
+    </div>
+
+    <h3 style="margin-top:22px">Your answers</h3>
+    <table id="report"><thead><tr><th>#</th><th>Question</th><th>Your answer</th><th></th></tr></thead><tbody></tbody></table>
+  </section>
+</main>
+<footer>CLEO Accredited Training · Truck mounted crane safety · Rigging &amp; slinging</footer>
+
+<script>
+/* ===== SETTINGS (Joe can change these) ===== */
+const CONFIG = {
+  quizTitle: "TMC Training",  // name of this test (shows on the result mail and PDF)
+  sendTo: "jolivier@mycleo.co.za",   // where results go
+  web3formsKey: "2e1d3de6-f101-4465-bf9f-840e9de848c5",               // paste the Web3Forms access key here to switch on automatic emailing
+  passMark: 80                        // percent needed to pass
+};
+
+/* ===== QUESTIONS (TMC learner handout 242978 + rigging & slinging notes) ===== */
+const QUESTIONS = [
+ {"s": "1 · Law, duties and PPE", "q": "Which Act and regulation are the main law for operating a truck mounted crane?", "a": "OHS Act 85 of 1993 and Driven Machinery Regulation 18 (lifting machines)", "o": ["The Road Traffic Act only", "The Basic Conditions of Employment Act", "Company rules only"], "why": "The OHS Act is the main legislation and Driven Machinery Regulation 18 sets out the rules for lifting machines and lifting tackle.", "ref": "TMC learner handout · Module 2"},
+ {"s": "1 · Law, duties and PPE", "q": "Who may operate a truck mounted crane?", "a": "Only an operator who is trained for that type of machine", "o": ["Any driver with a truck licence", "Anyone the foreman tells to try it", "Any person who has watched the operator"], "why": "Regulation 18(11): every lifting machine must be operated by an operator trained for that particular type of machine. Never operate a crane you are not certified for.", "ref": "TMC learner handout · Module 2"},
+ {"s": "1 · Law, duties and PPE", "q": "A colleague asks you to lift him on the hook to reach a high spot. What do you do?", "a": "Refuse. Nobody may be lifted unless the machine has an approved cradle", "o": ["Lift him slowly", "Lift him if he holds the sling tightly", "Lift him once only"], "why": "Regulation 18(8): nobody may be lifted or supported by a lifting machine unless it has a cradle approved for that purpose. No person on the hook or load.", "ref": "TMC learner handout · Modules 2 and 5"},
+ {"s": "1 · Law, duties and PPE", "q": "Who must provide your PPE, and how much do you pay for it?", "a": "The employer provides it free of charge", "o": ["You buy it yourself", "You pay half", "The client provides it"], "why": "Section 42 of the OHS Act and General Safety Regulation 2: where the risk cannot be removed the employer must provide PPE free of charge and instruct you in its use. You must look after it and report defects.", "ref": "TMC learner handout · Module 2"},
+ {"s": "1 · Law, duties and PPE", "q": "Why must you never paint your hard hat?", "a": "Paint solvents soften the shell and the paint hides cracks", "o": ["Paint makes the hat too heavy", "Paint is not allowed on company colours", "Paint stops it being seen"], "why": "Inspect the hard hat for cracks before use. Paint solvents soften the shell and hide cracks that would otherwise warn you the hat is damaged.", "ref": "TMC learner handout · Module 2"},
+ {"s": "2 · Pre-operating checks", "q": "When must the vehicle and crane checks be done?", "a": "Every day, before leaving the depot", "o": ["Only when the crane is on site", "Once a week", "Only when someone complains"], "why": "It is too late if you find a leaking hose or low hydraulic oil only after travelling to site. Check the crane before you leave the depot and hand in the check sheet daily.", "ref": "TMC learner handout · Module 3"},
+ {"s": "2 · Pre-operating checks", "q": "You find a defect during the checks. What do you do?", "a": "Cross it on the check sheet and report it immediately to the supervisor", "o": ["Tick it and carry on", "Fix it yourself", "Leave it for the next driver"], "why": "Do not tick items you have not checked. Found a defect? Cross it and report it immediately. A crane that needs repairs must not be used.", "ref": "TMC learner handout · Module 3"},
+ {"s": "2 · Pre-operating checks", "q": "What must be true about the roadworthy (fitness) disc and the licence disc?", "a": "Both must be displayed and in date at all times", "o": ["Only the licence disc is needed", "Only the fitness disc is needed", "They are only needed on long trips"], "why": "Do not confuse the two. The roadworthy disc and the registration licence disc must both be displayed, in date, at all times.", "ref": "TMC learner handout · Module 2"},
+ {"s": "2 · Pre-operating checks", "q": "How long may you run the starter at one time?", "a": "No longer than 10 seconds, then let it cool for 2 minutes", "o": ["As long as it takes to start", "30 seconds", "1 minute"], "why": "Starter no longer than 10 seconds, then let it cool for 2 minutes before trying again. Check that oil pressure develops within 10 seconds and warm up at idle for about 5 minutes.", "ref": "TMC learner handout · Module 3"},
+ {"s": "3 · Setting up the crane", "q": "Which four things must ALL be true before the crane can operate from the PTO?", "a": "Engine running, gear in neutral, park brake applied and PTO engaged", "o": ["Engine off, gear in 1st, park brake off and PTO off", "Engine running, gear in reverse, park brake off and PTO engaged", "Engine running, gear in neutral, park brake off and PTO off"], "why": "The engine turns the gearbox, the gearbox drives the PTO and the PTO drives the hydraulic pump. The crane only works with the engine running, neutral selected, park brake applied and PTO engaged.", "ref": "TMC learner handout · Module 5"},
+ {"s": "3 · Setting up the crane", "q": "Which of these is correct for outriggers?", "a": "On firm ground, on strong blocks, fully extended and the crane level", "o": ["On soft ground without blocks", "Only half extended to save time", "Any angle will do"], "why": "Outriggers stop the truck from turning over. Blocks and feet must be at 90 degrees to the cylinder, the outriggers fully extended and the crane level so that no single outrigger carries too much weight.", "ref": "TMC learner handout · Module 5"},
+ {"s": "3 · Setting up the crane", "q": "What do you do first when setting up the crane after the PTO is engaged?", "a": "Extend the outriggers, then raise the main boom", "o": ["Raise the main boom, then extend the outriggers", "Slew the mast", "Telescope the booms out"], "why": "Set-up order: start and engage the PTO, learn the controls, extend the outriggers, raise the main boom, raise the telescopic booms, then slew and telescope.", "ref": "TMC learner handout · Module 5"},
+ {"s": "3 · Setting up the crane", "q": "Where is the balancing (pivot) point of a truck mounted crane?", "a": "In the centre of the mast", "o": ["At the hook", "At the tip of the boom", "At the front bumper"], "why": "The balance point is like the fulcrum of a see-saw. The further a load is from the pivot the greater the leverage on the crane, so the further out you reach, the less you can safely lift.", "ref": "TMC learner handout · Module 4"},
+ {"s": "3 · Setting up the crane", "q": "What does the crane range diagram show?", "a": "The boom length and radius for safe operation", "o": ["The route to the site", "The service dates of the truck", "The colour code of the slings"], "why": "Always consult the range diagram for the crane you are using. The lifting range is affected by boom extension, crane capacity, type of operation, type of load, and the height and distance of the lift.", "ref": "TMC learner handout · Module 5"},
+ {"s": "3 · Setting up the crane", "q": "How do you pack up the crane at the end of the job?", "a": "Lower the booms, refold the main boom, retract the outriggers, disengage the PTO, switch off", "o": ["Retract the outriggers first, then lower the booms", "Switch off, then fold the crane", "Leave the booms raised"], "why": "Pack up in the reverse order of set-up. Never retract the outriggers while the booms are still raised.", "ref": "TMC learner handout · Module 5"},
+ {"s": "4 · Lifting safely", "q": "Before the main lift, what do you do first?", "a": "Lift a few centimetres and check the hold", "o": ["Lift straight to full height", "Swing the load quickly to test it", "Test the crane against its stability"], "why": "Lift a few centimetres first and check the hold. NEVER test the capacity of the crane against its stability.", "ref": "TMC learner handout · Module 5"},
+ {"s": "4 · Lifting safely", "q": "Why must you never drag a load into radius?", "a": "The crane lifts vertically. Dragging overstresses the boom and can cause failure", "o": ["It scratches the paint", "It wastes diesel", "It is slower"], "why": "A crane's rated capacity applies to a freely suspended load on a plumb line. Side pulls and dragging overstress the boom and can cause a structural or stability failure.", "ref": "TMC learner handout · Module 4 and Rigging & slinging notes"},
+ {"s": "4 · Lifting safely", "q": "Whose hand signals must the operator follow?", "a": "Only the appointed person, but a STOP signal from anyone", "o": ["Anyone who is standing close", "Only the truck driver", "Nobody, the operator decides"], "why": "Know who is in charge of the lift. The operator follows only that person, but must react to a stop signal from anyone, because something may be happening the person in charge cannot see.", "ref": "TMC learner handout · Module 4"},
+ {"s": "4 · Lifting safely", "q": "You need to leave the crane for a moment with a load hanging. What do you do?", "a": "Never leave the controls. Land the load first and follow the shut-down procedure", "o": ["Leave the engine running and walk away", "Ask a labourer to watch it", "Apply the park brake and go"], "why": "Never leave the controls with a load suspended. Land the load and follow the shut-down procedure before leaving the crane unattended.", "ref": "TMC learner handout · Modules 4 and 5"},
+ {"s": "4 · Lifting safely", "q": "What is the minimum safe distance from overhead power lines?", "a": "At least 8 metres, allowing for sag and sway", "o": ["1 metre", "2 metres", "Only touching the line is dangerous"], "why": "Assume lines are live unless a competent person confirms in writing that they are dead. The boom need not touch the line: current can flash over.", "ref": "TMC learner handout · Module 5"},
+ {"s": "4 · Lifting safely", "q": "Your crane touches a live power line and the ropes look welded to it. What do you do?", "a": "Warn everyone to stay away and stay put until the authority de-energises the line", "o": ["Jump off and run", "Climb down and push the rope off", "Drive away quickly"], "why": "The machine, the load and the ground are hot. Warn others to stay away. If the ropes look welded to the line stay put and wait. Afterwards inspect the crane, replace rope that touched and report the incident.", "ref": "TMC learner handout · Module 5"},
+ {"s": "4 · Lifting safely", "q": "How does wind affect the crane?", "a": "It reduces the rated capacity. Avoid large-surface loads and postpone in strong wind", "o": ["It has no effect on a crane", "It only affects the driver", "It makes the crane more stable"], "why": "Load charts are set without wind loading on the crane or the load. A large sheet can carry many kilograms of wind force. In strong wind, postpone the lift.", "ref": "TMC learner handout · Module 5"},
+ {"s": "4 · Lifting safely", "q": "When loading or unloading the truck with the crane, where do you work?", "a": "Over the rear. Do not swing the load over the cab", "o": ["Over the cab", "Over the cab with the driver inside", "Over the side where people walk"], "why": "When loading or unloading trucks the driver leaves the cab and you work over the rear. Never lift over people or over the cab.", "ref": "TMC learner handout · Module 5"},
+ {"s": "5 · Rigging and slinging", "q": "Where must the crane hook be in relation to the load's centre of gravity?", "a": "Directly above it", "o": ["To one side", "Behind it", "It makes no difference"], "why": "A suspended load always settles with its centre of gravity directly below the point of support. If the load tilts when you start the lift, lower it and re-sling.", "ref": "TMC learner handout · Module 6"},
+ {"s": "5 · Rigging and slinging", "q": "What happens to the load in each leg of a two-leg sling as the angle between the legs gets bigger?", "a": "It goes up. Keep the angle at 90 degrees or less and never above 120 degrees", "o": ["It goes down", "It stays the same", "Only the hook is affected"], "why": "At 0 degrees each leg carries half the load; at 90 degrees about 41% more; at 120 degrees each leg carries the full load. 120 degrees is the absolute limit.", "ref": "Rigging & slinging notes · Sling angle"},
+ {"s": "5 · Rigging and slinging", "q": "A sling is too long. May you tie a knot in it to shorten it?", "a": "No. Never knot or twist a sling to shorten it", "o": ["Yes, a single knot is fine", "Yes, if the load is light", "Yes, if you use two knots"], "why": "A knot or twist weakens the sling badly. Use shortening clutches for chain or a sling of the right length.", "ref": "TMC learner handout · Module 6 · Rigging & slinging notes"},
+ {"s": "5 · Rigging and slinging", "q": "A wire rope sling has a kink and no SWL tag. What do you do?", "a": "Take it out of service and report it. It must be destroyed or repaired by a competent person", "o": ["Use it for a light load", "Hang it on a hook for someone else", "Cut the kink out yourself"], "why": "Examine all gear first. Defective gear must be destroyed, not just discarded. A sling with no SWL tag, or with a kink, must not be used.", "ref": "TMC learner handout · Module 6 · Rigging & slinging notes"},
+ {"s": "5 · Rigging and slinging", "q": "A two-leg load is lifted with a four-leg sling. What do you do with the unused legs?", "a": "Hook them back onto the master link", "o": ["Let them hang loose", "Tie them to the load", "Cut them off"], "why": "Unused sling legs go back onto the master link so they cannot catch on anything or swing into people.", "ref": "TMC learner handout · Module 6 · Rigging & slinging notes"},
+ {"s": "5 · Rigging and slinging", "q": "How far must you stand from a suspended load, or what must you have?", "a": "At least 5 metres away, or have an escape route. Never turn your back on it", "o": ["Stand directly under it", "1 metre is enough", "Beside it with your back to it"], "why": "Stand at least 5 m from a suspended load or have an escape route. Never turn your back on it, and never stand under or beside it.", "ref": "TMC learner handout · Module 6"},
+ {"s": "5 · Rigging and slinging", "q": "How often must a competent person examine lifting tackle and record it in a signed book?", "a": "At least every three months", "o": ["Once a year", "Every 5 years", "Only after an accident"], "why": "Regulation 18(10): lifting tackle must be examined at intervals not exceeding three months and the result entered and signed in a book. Every sling must also be inspected before each use.", "ref": "TMC learner handout · Module 2 · Rigging & slinging notes"}
+];
+
+/* ===== APP ===== */
+const $ = id => document.getElementById(id);
+let order = [], idx = 0, answers = [], learner = {};
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function esc(t){ return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function validSAID(id){
+  if(!/^\d{13}$/.test(id)) return false;
+  let sum=0; for(let i=0;i<13;i++){ let d=+id[12-i]; if(i%2===1){ d*=2; if(d>9) d-=9; } sum+=d; }
+  return sum%10===0;
+}
+
+$("start").onclick = () => {
+  const name=$("name").value.trim().replace(/\s+/g," "), idn=$("idn").value.replace(/\s/g,""), site=$("site").value.trim();
+  if(name.split(" ").length<2){ $("err1").textContent="Please type your name and surname."; return; }
+  const isSA=/^\d+$/.test(idn);
+  if(isSA && !validSAID(idn)){ $("err1").textContent="That SA ID number is not valid. Check all 13 digits."; return; }
+  if(!isSA && idn.length<6){ $("err1").textContent="Please type your ID or passport number."; return; }
+  learner={name,id:idn,site,started:new Date()};
+  order=shuffle(QUESTIONS.map((q,i)=>i)); idx=0; answers=[];
+  $("s1").classList.add("hide"); $("s2").classList.remove("hide");
+  showQ();
+};
+
+function showQ(){
+  const q=QUESTIONS[order[idx]];
+  $("prog").style.width=(idx/order.length*100)+"%";
+  $("count").textContent=`Question ${idx+1} of ${order.length}`;
+  $("section").textContent=q.s;
+  $("qtext").textContent=q.q;
+  $("why").className="why"; $("why").innerHTML="";
+  $("next").disabled=true;
+  $("next").textContent= idx===order.length-1 ? "See my result" : "Next question";
+  const opts=$("opts"); opts.innerHTML="";
+  shuffle([q.a,...q.o]).forEach(t=>{
+    const b=document.createElement("button"); b.className="opt"; b.textContent=t;
+    b.onclick=()=>pick(b,t,q); opts.appendChild(b);
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function pick(btn,t,q){
+  const ok = t===q.a;
+  answers.push({n:order[idx]+1,q:q.q,given:t,correct:q.a,ok});
+  [...$("opts").children].forEach(b=>{ b.disabled=true; if(b.textContent===q.a) b.classList.add("right"); });
+  if(!ok) btn.classList.add("wrong");
+  $("why").innerHTML=`<h3 class="${ok?'ok':'no'}">${ok?'✔ Correct':'✘ Not correct'}</h3>${ok?'':`<p><b>Correct answer:</b> ${esc(q.a)}</p>`}<p><b>Why:</b> ${esc(q.why)}</p><small>Safety rules: ${esc(q.ref)}</small>`;
+  $("why").className="why show";
+  $("next").disabled=false;
+}
+
+$("next").onclick=()=>{ idx++; if(idx<order.length) showQ(); else finish(); };
+
+function result(){
+  const right=answers.filter(a=>a.ok).length, pct=Math.round(right/answers.length*100);
+  return {right,total:answers.length,pct,pass:pct>=CONFIG.passMark};
+}
+
+function finish(){
+  learner.finished=new Date();
+  const r=result();
+  $("s2").classList.add("hide"); $("s3").classList.remove("hide");
+  $("score").textContent=`${r.pct}%`;
+  $("verdict").innerHTML= r.pass ? `<span class="pass">PASSED – ${r.right} of ${r.total} correct</span>` : `<span class="fail">NOT YET COMPETENT – ${r.right} of ${r.total} correct (need ${CONFIG.passMark}%)</span>`;
+  $("who").textContent=`${learner.name} · ${learner.id}${learner.site?' · '+learner.site:''} · ${learner.finished.toLocaleString('en-ZA')}`;
+  const tb=$("report").querySelector("tbody"); tb.innerHTML="";
+  answers.forEach((a,i)=>{ tb.insertAdjacentHTML("beforeend",`<tr><td>${i+1}</td><td>${esc(a.q)}</td><td>${esc(a.given)}${a.ok?'':`<br><small style="color:var(--good)">Correct: ${esc(a.correct)}</small>`}</td><td>${a.ok?'✔':'✘'}</td></tr>`); });
+  window.scrollTo({top:0});
+}
+
+$("agree").onchange=e=>{ $("send").disabled=!e.target.checked; };
+
+function reportText(){
+  const r=result();
+  const lines=[
+    `CLEO ${CONFIG.quizTitle.toUpperCase()} – QUIZ RESULT`,"",
+    `Name: ${learner.name}`, `ID / passport: ${learner.id}`, `Company / site: ${learner.site||'-'}`,
+    `Completed: ${learner.finished.toLocaleString('en-ZA')}`,
+    `Score: ${r.right}/${r.total} (${r.pct}%) – ${r.pass?'PASSED':'NOT YET COMPETENT'}`,
+    `Declaration accepted: ${$("agree").checked?'YES':'NO'}`,"",
+    "Answers:"
+  ];
+  answers.forEach((a,i)=>lines.push(`${i+1}. ${a.ok?'[OK]':'[X] '} ${a.q}\n    Answer: ${a.given}${a.ok?'':`\n    Correct: ${a.correct}`}`));
+  return lines.join("\n");
+}
+
+function status(msg,ok){ const s=$("status"); s.textContent=msg; s.className="status show "+(ok?"okk":"bad"); }
+
+function mailtoLink(){
+  const r=result();
+  const subj=`CLEO quiz: ${CONFIG.quizTitle} – ${learner.name} – ${r.pct}% ${r.pass?"PASS":"NYC"}`;
+  return `mailto:${CONFIG.sendTo}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(reportText())}`;
+}
+
+$("send").onclick=async()=>{
+  const r=result();
+  $("send").disabled=true;
+  if(!CONFIG.web3formsKey){
+    // no automatic mail set up yet: open the learner's own mail app with the report filled in
+    location.href=mailtoLink();
+    status("Your email app has opened with the result filled in. Press SEND in your email app to finish.",true);
+    $("send").disabled=false; return;
+  }
+  status("Sending…",true);
+  try{
+    const res=await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},
+      body:JSON.stringify({access_key:CONFIG.web3formsKey,subject:`CLEO quiz: ${CONFIG.quizTitle} – ${learner.name} – ${r.pct}% ${r.pass?"PASS":"NYC"}`,
+        from_name:"CLEO Safety Quiz",name:learner.name,id_number:learner.id,site:learner.site||"-",score:`${r.right}/${r.total} (${r.pct}%)`,
+        result:r.pass?"PASSED":"NOT YET COMPETENT",message:reportText()})});
+    const j=await res.json();
+    if(j.success){ status("✔ Your result was sent to CLEO. You can close this page.",true); $("agree").disabled=true; }
+    else throw new Error(j.message||"failed");
+  }catch(e){
+    status("Could not send (no internet?). Press 'Send by email instead' or try again.",false);
+    $("send").disabled=false; $("mailbtn").classList.remove("hide");
+  }
+};
+$("mailbtn").onclick=()=>{ location.href=mailtoLink(); };
+$("print").onclick=()=>window.print();
+</script>
+</body>
+</html>
