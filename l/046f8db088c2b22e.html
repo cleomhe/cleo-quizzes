@@ -83,17 +83,17 @@ button.ghost{background:#fff;color:var(--navy);border:2px solid var(--navy);bord
 </div></div>
 <main>
   <div class="box">
-    <h2>1. About you</h2>
+    <h2>1. About you and your shift</h2>
     <div class="row3">
       <div><label for="who">Your name *</label><input id="who" autocomplete="name" placeholder="Name and surname"></div>
       <div><label for="role">Your position</label><input id="role" placeholder="e.g. Shift Supervisor"></div>
       <div><label for="email">Your email (so we can reply)</label><input id="email" type="email" autocomplete="email" placeholder="name@adfusion.co.za"></div>
     </div>
-  </div>
-
-  <div class="box" id="sitesbox">
-    <h2>2. Pick your site and shift</h2>
-    <div id="sites"></div>
+    <div class="row2">
+      <div><label for="siteSel">Your site / DC *</label><select id="siteSel"></select></div>
+      <div><label for="shiftSel">Your shift *</label><select id="shiftSel"></select></div>
+    </div>
+    <div class="hint" id="pickhint">Choose your site and shift. You will then only see the people on your shift.</div>
   </div>
 
   <div class="box hide" id="work">
@@ -128,7 +128,8 @@ const CONFIG = {
   built: "2026-11-27"
 };
 /* DATA is built from the CLEO follow-up workbook: [shift, name, sap, job title, equipment, code, expiry (ISO), type] type: e = expiring, n = no licence info */
-const DATA = [["Cent Returns RC2 A Shift", "Mvuyisi Mayekisa", "13642200", "Order Picker Assistant SC", "", "", "", "n"], ["Cent Returns RC2 A Shift", "Robert Rikhotso", "12353051", "Order Picker Assistant SC", "", "", "", "n"]];
+const DATA = [];
+const MANIFEST = {"Centurion Coldstore": [{"label": "A Shift", "full": "Cent Coldstore A Shift", "token": "2f11ccbdf451156a"}, {"label": "B Shift", "full": "Cent Coldstore B Shift", "token": "27877da232dde248"}, {"label": "C Shift", "full": "Cent Coldstore C Shift", "token": "933219663631465c"}, {"label": "Straight Shift", "full": "Cent Coldstore Straight Shift", "token": "3ee2505894a9607c"}], "Centurion DC": [{"label": "A Shift", "full": "Cent DC A Shift", "token": "ad3cf082df372026"}, {"label": "B Shift", "full": "Cent DC B Shift", "token": "47200dcf3b0a2444"}, {"label": "C Shift", "full": "Cent DC C Shift", "token": "b1caef6d5d29a795"}, {"label": "C Shift Non Billable", "full": "Cent DC C Shift Non Billable", "token": "ba9f7f72884af6a9"}, {"label": "D Shift", "full": "Cent DC D Shift", "token": "1dc585f05752aa40"}, {"label": "Inhouse Backup D Shift", "full": "Cent DC Inhouse Backup D Shift", "token": "0538452529f823c3"}, {"label": "MSP", "full": "Cent DC MSP", "token": "95e626625abe1fd9"}], "Centurion Returns RC1": [{"label": "A Shift", "full": "Cent Returns RC1 A Shift", "token": "6fc308d5d9da08c4"}, {"label": "B Shift", "full": "Cent Returns RC1 B Shift", "token": "08c678a4ab468c15"}, {"label": "C Shift", "full": "Cent Returns RC1 C Shift", "token": "856a1b6dab53771d"}, {"label": "D Shift", "full": "Cent Returns RC1 D Shift", "token": "2e1e13c0139b29b4"}], "Centurion Returns RC2": [{"label": "A Shift", "full": "Cent Returns RC2 A Shift", "token": "69feb29cfa32713e"}, {"label": "B Shift", "full": "Cent Returns RC2 B Shift", "token": "2371dce55500f5d1"}, {"label": "C Shift", "full": "Cent Returns RC2 C Shift", "token": "2a8640ea114cb4f4"}, {"label": "D Shift", "full": "Cent Returns RC2 D Shift", "token": "e29c78ac445bcd74"}], "Riverfields CS": [{"label": "C Shift", "full": "Riverfields CS C Shift", "token": "eef73e51c5960967"}], "Riverfields DC": [{"label": "A Shift", "full": "Riverfields DC A Shift", "token": "9f1c724d64ddc962"}, {"label": "B Shift", "full": "Riverfields DC B Shift", "token": "034fba82b878db51"}, {"label": "C Shift", "full": "Riverfields DC C Shift", "token": "92368044f72e72af"}], "Riverfields RC": [{"label": "A Shift", "full": "Riverfields RC A Shift", "token": "a1ff0402506adead"}]};
 
 const EQUIP=["Forklift","Reach truck","Order picker","PPT / LT (pallet truck)","Crane / other"];
 const EXP_OPTS=[
@@ -265,8 +266,20 @@ $("send").addEventListener("click",async()=>{
   }
   btn.disabled=false;btn.textContent="Submit to CLEO";
 });
-renderSites();updateCount();
-if(Object.keys(shifts).length===1){$("sitesbox").classList.add("hide");openShiftQuiet(Object.keys(shifts)[0])}
+renderSites=function(){};
+function hideWork(){$("work").classList.add("hide");$("sendbox").classList.add("hide");cur=null}
+function fillSites(){$("siteSel").innerHTML='<option value="">— choose your site —</option>'+Object.keys(MANIFEST).map(x=>`<option>${esc(x)}</option>`).join("")}
+$("siteSel").addEventListener("change",()=>{const v=$("siteSel").value,sh=$("shiftSel");sh.innerHTML='<option value="">— choose your shift —</option>'+(v?MANIFEST[v].map(x=>`<option value="${esc(x.full)}">${esc(x.label)}</option>`).join(""):"");sh.disabled=!v;hideWork()});
+$("shiftSel").addEventListener("change",()=>{const full=$("shiftSel").value;if(!full){hideWork();return}loadShift(full)});
+function loadShift(full){
+  if(shifts[full]){openShiftQuiet(full);return}
+  const x=Object.values(MANIFEST).flat().find(y=>y.full===full);if(!x)return;
+  $("pickhint").textContent="Loading your shift...";
+  const sc=document.createElement("script");sc.src="d/"+x.token+".js";
+  sc.onload=()=>{window.__SD.forEach(r=>{DATA.push(r);(shifts[r[0]]=shifts[r[0]]||[]).push(r)});$("pickhint").textContent="";openShiftQuiet(full)};
+  sc.onerror=()=>{$("pickhint").textContent="Could not load your list. Please check your internet and try again."};
+  document.head.appendChild(sc)}
+fillSites();$("shiftSel").disabled=true;updateCount();
 function openShiftQuiet(s){cur=s;$("work").classList.remove("hide");$("sendbox").classList.remove("hide");$("workTitle").textContent=s;renderLists();setTab(shifts[s].some(r=>r[7]==="e")||!shifts[s].some(r=>r[7]==="n")?1:2)}
 </script>
 </body>
