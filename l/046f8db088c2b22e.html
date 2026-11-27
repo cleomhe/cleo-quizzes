@@ -130,6 +130,7 @@ const CONFIG = {
 /* DATA is built from the CLEO follow-up workbook: [shift, name, sap, job title, equipment, code, expiry (ISO), type] type: e = expiring, n = no licence info */
 const DATA = [];
 const MANIFEST = {"Centurion Coldstore": [{"label": "A Shift", "full": "Cent Coldstore A Shift", "token": "2f11ccbdf451156a"}, {"label": "B Shift", "full": "Cent Coldstore B Shift", "token": "27877da232dde248"}, {"label": "C Shift", "full": "Cent Coldstore C Shift", "token": "933219663631465c"}, {"label": "Straight Shift", "full": "Cent Coldstore Straight Shift", "token": "3ee2505894a9607c"}], "Centurion DC": [{"label": "A Shift", "full": "Cent DC A Shift", "token": "ad3cf082df372026"}, {"label": "B Shift", "full": "Cent DC B Shift", "token": "47200dcf3b0a2444"}, {"label": "C Shift", "full": "Cent DC C Shift", "token": "b1caef6d5d29a795"}, {"label": "C Shift Non Billable", "full": "Cent DC C Shift Non Billable", "token": "ba9f7f72884af6a9"}, {"label": "D Shift", "full": "Cent DC D Shift", "token": "1dc585f05752aa40"}, {"label": "Inhouse Backup D Shift", "full": "Cent DC Inhouse Backup D Shift", "token": "0538452529f823c3"}, {"label": "MSP", "full": "Cent DC MSP", "token": "95e626625abe1fd9"}], "Centurion Returns RC1": [{"label": "A Shift", "full": "Cent Returns RC1 A Shift", "token": "6fc308d5d9da08c4"}, {"label": "B Shift", "full": "Cent Returns RC1 B Shift", "token": "08c678a4ab468c15"}, {"label": "C Shift", "full": "Cent Returns RC1 C Shift", "token": "856a1b6dab53771d"}, {"label": "D Shift", "full": "Cent Returns RC1 D Shift", "token": "2e1e13c0139b29b4"}], "Centurion Returns RC2": [{"label": "A Shift", "full": "Cent Returns RC2 A Shift", "token": "69feb29cfa32713e"}, {"label": "B Shift", "full": "Cent Returns RC2 B Shift", "token": "2371dce55500f5d1"}, {"label": "C Shift", "full": "Cent Returns RC2 C Shift", "token": "2a8640ea114cb4f4"}, {"label": "D Shift", "full": "Cent Returns RC2 D Shift", "token": "e29c78ac445bcd74"}], "Riverfields CS": [{"label": "C Shift", "full": "Riverfields CS C Shift", "token": "eef73e51c5960967"}], "Riverfields DC": [{"label": "A Shift", "full": "Riverfields DC A Shift", "token": "9f1c724d64ddc962"}, {"label": "B Shift", "full": "Riverfields DC B Shift", "token": "034fba82b878db51"}, {"label": "C Shift", "full": "Riverfields DC C Shift", "token": "92368044f72e72af"}], "Riverfields RC": [{"label": "A Shift", "full": "Riverfields RC A Shift", "token": "a1ff0402506adead"}]};
+const UNLOCK = "03208435";
 
 const EQUIP=["Forklift","Reach truck","Order picker","PPT / LT (pallet truck)","Crane / other"];
 const EXP_OPTS=[
@@ -259,7 +260,8 @@ $("send").addEventListener("click",async()=>{
     const r=await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({access_key:CONFIG.web3formsKey,subject:"Adfusion MHE licence update - "+rep.shiftNames.join(", ")+" - "+rep.who,from_name:"Adfusion licence form",name:rep.who,email:rep.email||undefined,message:rep.text,...Object.fromEntries(rep.photos.flatMap((p,i)=>[[`photo_${i+1}_of`,p.label],[`photo_${i+1}`,p.data]]))})});
     const j=await r.json();
     if(!j.success)throw new Error(j.message||"send failed");
-    res.innerHTML=`<div class="msg ok">Thank you ${esc(rep.who)}. Your update for ${rep.n} ${rep.n===1?"person":"people"} was sent to CLEO.</div>`;
+    res.innerHTML=`<div class="msg ok">Thank you ${esc(rep.who)}. Your update for ${rep.n} ${rep.n===1?"person":"people"} was sent to CLEO. Your shift is now locked. You can still add more people on this shift and submit again.</div>`;
+    lockShift(cur);
     
   }catch(err){
     res.innerHTML=`<div class="msg err">Could not send automatically (${esc(err.message)}). Please press the button below to send it by email instead.</div><p><a href="${mailto(rep)}"><button class="ghost" type="button">Send by email instead</button></a></p>`;
@@ -279,7 +281,23 @@ function loadShift(full){
   sc.onload=()=>{window.__SD.forEach(r=>{DATA.push(r);(shifts[r[0]]=shifts[r[0]]||[]).push(r)});$("pickhint").textContent="";openShiftQuiet(full)};
   sc.onerror=()=>{$("pickhint").textContent="Could not load your list. Please check your internet and try again."};
   document.head.appendChild(sc)}
-fillSites();$("shiftSel").disabled=true;updateCount();
+function lockShift(full){
+  if(!full)return;
+  const site=Object.keys(MANIFEST).find(k=>MANIFEST[k].some(x=>x.full===full));
+  try{localStorage.setItem("cleoLicLock",JSON.stringify({site,full}))}catch(e){}
+  applyLock(site,full)}
+function applyLock(site,full){
+  $("siteSel").value=site;$("siteSel").dispatchEvent(new Event("change"));
+  $("shiftSel").value=full;$("siteSel").disabled=true;$("shiftSel").disabled=true;
+  $("pickhint").innerHTML="Your shift is locked to <b>"+esc(full)+"</b>. Picked the wrong one? Please let Joe at CLEO know (jolivier@mycleo.co.za or 082 870 9429) and he will reset it.";
+  loadShift(full)}
+fillSites();$("shiftSel").disabled=true;
+try{
+  if(location.search.indexOf("unlock="+UNLOCK)>-1){localStorage.removeItem("cleoLicLock")}
+  const lk=JSON.parse(localStorage.getItem("cleoLicLock")||"null");
+  if(lk&&lk.site&&lk.full&&MANIFEST[lk.site])applyLock(lk.site,lk.full);
+}catch(e){}
+updateCount();
 function openShiftQuiet(s){cur=s;$("work").classList.remove("hide");$("sendbox").classList.remove("hide");$("workTitle").textContent=s;renderLists();setTab(shifts[s].some(r=>r[7]==="e")||!shifts[s].some(r=>r[7]==="n")?1:2)}
 </script>
 </body>
