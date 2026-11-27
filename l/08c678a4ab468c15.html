@@ -112,15 +112,17 @@ const DATA = [["Cent Returns RC1 B Shift", "Molebatsi Lamola", "13719297", "Fork
 const EQUIP=["Forklift","Reach truck","Order picker","PPT / LT (pallet truck)","Crane / other"];
 const EXP_OPTS=[
  ["","— choose —"],
- ["booked","Refresher training booked / requested"],
+ ["notyet","Still operates – not yet booked"],
+ ["busy","Busy arranging a booking (documents / medical / material)"],
+ ["sent","Booking already sent to CLEO"],
  ["renewed","Already renewed (new licence)"],
- ["noneed","No longer needs a licence (does not operate)"],
+ ["noneed","No longer operates – does not need a licence"],
  ["left","Left the company / not on this shift"],
  ["other","Other (explain in the note)"]];
 const NOINFO_OPTS=[
  ["","— choose —"],
  ["has","Has a valid licence (we do not have a copy)"],
- ["train","Needs training – please book"],
+ ["train","Operates, no licence yet – training still needed"],
  ["noneed","Does not operate machines"],
  ["left","Left the company / not on this shift"],
  ["other","Other (explain in the note)"]];
@@ -160,20 +162,18 @@ function card(r){
   head+=`</div>`;
   const show=s=>e.status===s?"":"hide";
   const sub=isE
-   ?`<div class="sub ${show("booked")}" data-for="booked"><label>Booking / training date</label><input type="date" data-f="date" value="${esc(e.date||"")}"></div>
-     <div class="sub ${show("renewed")}" data-for="renewed"><div class="row3"><div><label>New licence expiry date</label><input type="date" data-f="expiry" value="${esc(e.expiry||"")}"></div><div><label>Issued by</label><input data-f="issuer" value="${esc(e.issuer||"")}" placeholder="Training provider"></div><div><label>Licence / certificate no.</label><input data-f="certno" value="${esc(e.certno||"")}"></div></div></div>`
-   :`<div class="sub ${show("has")}" data-for="has"><div class="row3"><div><label>Machine</label><select data-f="equip">${eq}</select></div><div><label>Licence code (e.g. F5A+M)</label><input data-f="code" value="${esc(e.code||"")}"></div><div><label>Expiry date</label><input type="date" data-f="expiry" value="${esc(e.expiry||"")}"></div></div><div class="row2"><div><label>Issued by (training provider)</label><input data-f="issuer" value="${esc(e.issuer||"")}"></div><div><label>Licence / certificate no.</label><input data-f="certno" value="${esc(e.certno||"")}"></div></div><div class="hint">Please email a copy of the licence to jolivier@mycleo.co.za.</div></div>
-     <div class="sub ${show("train")}" data-for="train"><label>Preferred training date (optional)</label><input type="date" data-f="date" value="${esc(e.date||"")}"></div>`;
+   ?`<div class="sub ${show("renewed")}" data-for="renewed"><div class="row3"><div><label>New licence expiry date</label><input type="date" data-f="expiry" value="${esc(e.expiry||"")}"></div><div><label>Issued by</label><input data-f="issuer" value="${esc(e.issuer||"")}" placeholder="Training provider"></div><div><label>Licence / certificate no.</label><input data-f="certno" value="${esc(e.certno||"")}"></div></div></div>`
+   :`<div class="sub ${show("has")}" data-for="has"><div class="row3"><div><label>Machine</label><select data-f="equip">${eq}</select></div><div><label>Licence code (e.g. F5A+M)</label><input data-f="code" value="${esc(e.code||"")}"></div><div><label>Expiry date</label><input type="date" data-f="expiry" value="${esc(e.expiry||"")}"></div></div><div class="row2"><div><label>Issued by (training provider)</label><input data-f="issuer" value="${esc(e.issuer||"")}"></div><div><label>Licence / certificate no.</label><input data-f="certno" value="${esc(e.certno||"")}"></div></div><div class="hint">Please email a copy of the licence to jolivier@mycleo.co.za.</div></div>`;
   return `<div class="person ${isE?"":"noinfo"}${entryFilled(e)?" filled":""}" data-k="${esc(k)}">${head}
     <label>What is the situation?</label><select data-f="status">${opts}</select>${sub}
     <label>Note (optional)</label><input data-f="note" value="${esc(e.note||"")}" placeholder=""></div>`
 }
 function renderLists(){
   const rows=shifts[cur];const A=rows.filter(r=>r[7]==="e"),B=rows.filter(r=>r[7]==="n");
-  $("tab1").innerHTML=`<b>Licences expiring (${A.length})</b><small>Licence runs out soon – training booked?</small>`;
+  $("tab1").innerHTML=`<b>Licences expiring (${A.length})</b><small>Licence runs out soon – where do they stand?</small>`;
   $("tab2").innerHTML=`<b>No licence information (${B.length})</b><small>Operators we have no licence for</small>`;
-  $("list1").innerHTML=A.length?`<p class="hint">These people's licences expire before 5 January 2027. Tell us if refresher training is booked, or if they no longer need a licence.</p>`+A.map(card).join(""):`<p class="hint">No licences are expiring on this shift.</p>`;
-  $("list2").innerHTML=B.length?`<p class="hint">We have no licence on record for these operators. If they hold a valid licence, fill in the details. If they need training, say so.</p>`+B.map(card).join(""):`<p class="hint">Nobody on this shift is missing licence information.</p>`;
+  $("list1").innerHTML=A.length?`<p class="hint">These people's licences expire before 5 January 2027. Tell us where each person stands: still operating, busy arranging a booking, already renewed, or no longer operating.</p>`+A.map(card).join(""):`<p class="hint">No licences are expiring on this shift.</p>`;
+  $("list2").innerHTML=B.length?`<p class="hint">We have no licence on record for these operators. If they hold a valid licence, fill in the details. If they operate without a licence, say so.</p>`+B.map(card).join(""):`<p class="hint">Nobody on this shift is missing licence information.</p>`;
   document.querySelectorAll(".person").forEach(p=>{
     const k=p.dataset.k;
     p.querySelectorAll("[data-f]").forEach(inp=>inp.addEventListener("input",()=>{
@@ -187,7 +187,7 @@ function renderLists(){
 function allEntries(){const out=[];DATA.forEach(r=>{const e=state[key(r)];if(entryFilled(e))out.push({r,e})});return out}
 function updateCount(){const n=allEntries().length;$("count").textContent=n?`${n} ${n===1?"person":"people"} filled in (all shifts)`:"Nothing filled in yet";renderSitesKeep()}
 let rs=0;function renderSitesKeep(){clearTimeout(rs);rs=setTimeout(renderSites,150)}
-const LAB={booked:"Refresher training booked/requested",renewed:"Already renewed",noneed:"No longer needs a licence",left:"Left / not on this shift",other:"Other",has:"Has a valid licence (no copy on record)",train:"Needs training - please book"};
+const LAB={notyet:"Still operates - not yet booked",busy:"Busy arranging a booking",sent:"Booking already sent to CLEO",renewed:"Already renewed",noneed:"No longer operates / no licence needed",left:"Left / not on this shift",other:"Other",has:"Has a valid licence (no copy on record)",train:"Operates, no licence yet - training still needed"};
 
 function report(){
   const who=$("who").value.trim(),role=$("role").value.trim(),email=$("email").value.trim();
