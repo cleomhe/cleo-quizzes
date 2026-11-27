@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Adfusion MHE Licence Update</title>
+<style>
+:root{--navy:#1F3357;--navy2:#2c4676;--bg:#f3f5f9;--card:#fff;--line:#d9dee8;--text:#1b2433;--muted:#5d6879;--amber:#fff4d6;--amberb:#e3b53c;--red:#fde6e6;--redb:#d96a6a;--green:#e3f5e8;--greenb:#3f9d5b;--accent:#c97800}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.45}
+header{background:var(--navy);color:#fff;padding:18px 16px}
+header h1{margin:0;font-size:1.25rem}
+header p{margin:4px 0 0;font-size:.9rem;opacity:.85}
+main{max-width:980px;margin:0 auto;padding:16px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.box h2{margin:0 0 8px;font-size:1.02rem;color:var(--navy)}
+label{display:block;font-size:.82rem;font-weight:600;color:var(--muted);margin:8px 0 3px}
+input,select,textarea{width:100%;font:inherit;padding:9px 10px;border:1px solid #b9c1d0;border-radius:7px;background:#fff;color:var(--text)}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid #9db8ee;outline-offset:1px}
+textarea{min-height:56px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:640px){.row2,.row3{grid-template-columns:1fr}}
+.site h3{margin:12px 0 6px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.shifts{display:flex;flex-wrap:wrap;gap:8px}
+.shift{border:2px solid var(--line);background:#fff;border-radius:9px;padding:8px 12px;cursor:pointer;font:inherit;text-align:left;min-width:132px}
+.shift b{display:block;color:var(--navy)}
+.shift small{color:var(--muted)}
+.shift.sel{border-color:var(--navy);background:#e8eefb}
+.shift.done b::after{content:" ✓";color:var(--greenb)}
+.tabs{display:flex;gap:8px;margin:6px 0 12px;flex-wrap:wrap}
+.tab{flex:1;min-width:210px;border:2px solid var(--line);background:#fff;border-radius:9px;padding:10px 12px;cursor:pointer;font:inherit;text-align:left}
+.tab b{display:block}
+.tab small{color:var(--muted)}
+.tab.sel.t1{border-color:var(--amberb);background:var(--amber)}
+.tab.sel.t2{border-color:var(--redb);background:var(--red)}
+.person{border:1px solid var(--line);border-left:6px solid var(--amberb);border-radius:9px;padding:10px 12px;margin-bottom:10px;background:#fff}
+.person.noinfo{border-left-color:var(--redb)}
+.person.filled{background:var(--green);border-color:var(--greenb);border-left-color:var(--greenb)}
+.pname{font-weight:700}
+.meta{font-size:.84rem;color:var(--muted)}
+.pill{display:inline-block;font-size:.76rem;padding:1px 8px;border-radius:99px;background:var(--amber);border:1px solid var(--amberb);margin-left:6px}
+.pill.soon{background:#ffe1c2;border-color:#e08a2b}
+.hide{display:none}
+.hint{font-size:.84rem;color:var(--muted);margin:2px 0 10px}
+button.primary{background:var(--navy);color:#fff;border:0;border-radius:9px;padding:12px 22px;font:inherit;font-weight:700;cursor:pointer}
+button.primary:hover{background:var(--navy2)}
+button.primary[disabled]{opacity:.55;cursor:wait}
+button.ghost{background:#fff;color:var(--navy);border:2px solid var(--navy);border-radius:9px;padding:9px 16px;font:inherit;font-weight:600;cursor:pointer}
+.msg{padding:12px 14px;border-radius:9px;margin:10px 0;font-weight:600}
+.msg.ok{background:var(--green);border:1px solid var(--greenb)}
+.msg.err{background:var(--red);border:1px solid var(--redb)}
+.sticky{position:sticky;bottom:0;background:rgba(243,245,249,.96);padding:10px 0;border-top:1px solid var(--line);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.count{font-size:.9rem;color:var(--muted)}
+.sub{margin-top:8px;padding:8px 10px;background:#f7f9fc;border:1px dashed #c5cde0;border-radius:8px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Adfusion MHE licence update</h1>
+  <p>CLEO · Please check the people on your shift and fill in what you know. It comes straight through to CLEO when you submit.</p>
+</header>
+<main>
+  <div class="box">
+    <h2>1. About you</h2>
+    <div class="row3">
+      <div><label for="who">Your name *</label><input id="who" autocomplete="name" placeholder="Name and surname"></div>
+      <div><label for="role">Your position</label><input id="role" placeholder="e.g. Shift Supervisor"></div>
+      <div><label for="email">Your email (so we can reply)</label><input id="email" type="email" autocomplete="email" placeholder="name@adfusion.co.za"></div>
+    </div>
+  </div>
+
+  <div class="box" id="sitesbox">
+    <h2>2. Pick your site and shift</h2>
+    <div id="sites"></div>
+  </div>
+
+  <div class="box hide" id="work">
+    <h2 id="workTitle"></h2>
+    <div class="tabs">
+      <button class="tab t1 sel" id="tab1" type="button"></button>
+      <button class="tab t2" id="tab2" type="button"></button>
+    </div>
+    <div id="list1"></div>
+    <div id="list2" class="hide"></div>
+  </div>
+
+  <div class="box hide" id="sendbox">
+    <h2>3. Send it to CLEO</h2>
+    <label for="gnote">Anything else we should know? (optional)</label>
+    <textarea id="gnote" placeholder="e.g. people who left, new people not on the list, machines in use..."></textarea>
+    <div class="sticky">
+      <button class="primary" id="send" type="button">Submit to CLEO</button>
+      <span class="count" id="count"></span>
+    </div>
+    <div id="result"></div>
+  </div>
+  <p class="hint">Only fill in the people you have information for. You can switch between shifts and submit each one, or all together. Nothing is sent until you press Submit.</p>
+</main>
+
+<script>
+const CONFIG = {
+  title: "Adfusion MHE Licence Update",
+  web3formsKey: "2e1d3de6-f101-4465-bf9f-840e9de848c5",
+  sendTo: "jolivier@mycleo.co.za",
+  built: "2026-11-27"
+};
+/* DATA is built from the CLEO follow-up workbook: [shift, name, sap, job title, equipment, code, expiry (ISO), type] type: e = expiring, n = no licence info */
+const DATA = [["Riverfields CS C Shift", "Thabang Mathipa", "13732820", "Order Picker Assistant SC", "", "", "", "n"]];
+
+const EQUIP=["Forklift","Reach truck","Order picker","PPT / LT (pallet truck)","Crane / other"];
+const EXP_OPTS=[
+ ["","— choose —"],
+ ["booked","Refresher training booked / requested"],
+ ["renewed","Already renewed (new licence)"],
+ ["noneed","No longer needs a licence (does not operate)"],
+ ["left","Left the company / not on this shift"],
+ ["other","Other (explain in the note)"]];
+const NOINFO_OPTS=[
+ ["","— choose —"],
+ ["has","Has a valid licence (we do not have a copy)"],
+ ["train","Needs training – please book"],
+ ["noneed","Does not operate machines"],
+ ["left","Left the company / not on this shift"],
+ ["other","Other (explain in the note)"]];
+
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const $=id=>document.getElementById(id);
+let state={}; let cur=null; let tab=1;
+try{state=JSON.parse(localStorage.getItem("cleoLicState")||"{}")}catch(e){state={}}
+const save=()=>{try{localStorage.setItem("cleoLicState",JSON.stringify(state))}catch(e){}};
+["who","role","email"].forEach(k=>{try{$(k).value=localStorage.getItem("cleoLic_"+k)||""}catch(e){} $(k).addEventListener("input",()=>{try{localStorage.setItem("cleoLic_"+k,$(k).value)}catch(e){}})});
+
+const shifts={};
+DATA.forEach(r=>{(shifts[r[0]]=shifts[r[0]]||[]).push(r)});
+const siteOf=n=>n.startsWith("Cent DC")?"Centurion DC":n.startsWith("Cent Coldstore")?"Centurion Coldstore":n.startsWith("Cent Returns RC1")?"Centurion Returns RC1":n.startsWith("Cent Returns RC2")?"Centurion Returns RC2":n.startsWith("Riverfields")?"Riverfields":"Other";
+const shortName=n=>n.replace(/^Cent DC |^Cent Coldstore |^Cent Returns RC[12] |^Riverfields (CS|DC|RC) /,"")||n;
+const key=(r)=>r[0]+"|"+r[2]+"|"+r[7];
+const entryFilled=e=>e&&(e.status||e.note);
+function stats(s){let a=0,b=0,fa=0,fb=0;shifts[s].forEach(r=>{const f=entryFilled(state[key(r)]);if(r[7]==="e"){a++;if(f)fa++}else{b++;if(f)fb++}});return{a,b,fa,fb}}
+
+function renderSites(){
+  const groups={};Object.keys(shifts).sort().forEach(s=>{(groups[siteOf(s)]=groups[siteOf(s)]||[]).push(s)});
+  $("sites").innerHTML=Object.keys(groups).map(g=>`<div class="site"><h3>${esc(g)}</h3><div class="shifts">${groups[g].map(s=>{const t=stats(s);const done=(t.fa+t.fb)>0&&(t.fa+t.fb)===(t.a+t.b);return `<button type="button" class="shift${cur===s?" sel":""}${done?" done":""}" data-s="${esc(s)}"><b>${esc(shortName(s))}</b><small>${t.a} expiring · ${t.b} no info</small></button>`}).join("")}</div></div>`).join("");
+  document.querySelectorAll(".shift").forEach(b=>b.addEventListener("click",()=>openShift(b.dataset.s)));
+}
+function openShift(s){cur=s;$("work").classList.remove("hide");$("sendbox").classList.remove("hide");$("workTitle").textContent=s;renderSites();renderLists();setTab(shifts[s].some(r=>r[7]==="e")||!shifts[s].some(r=>r[7]==="n")?1:2);$("work").scrollIntoView({behavior:"smooth",block:"start"})}
+function setTab(n){tab=n;$("tab1").classList.toggle("sel",n===1);$("tab2").classList.toggle("sel",n===2);$("list1").classList.toggle("hide",n!==1);$("list2").classList.toggle("hide",n!==2)}
+$("tab1").addEventListener("click",()=>setTab(1));$("tab2").addEventListener("click",()=>setTab(2));
+
+function dleft(iso){if(!iso)return"";const d=Math.round((new Date(iso+"T00:00:00")-new Date(new Date().toDateString()))/864e5);return d}
+function fmtDate(iso){if(!iso)return"";const d=new Date(iso+"T00:00:00");return d.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}
+function card(r){
+  const k=key(r),e=state[k]||{};const isE=r[7]==="e";
+  const opts=(isE?EXP_OPTS:NOINFO_OPTS).map(o=>`<option value="${o[0]}"${e.status===o[0]?" selected":""}>${esc(o[1])}</option>`).join("");
+  const eq=["",...EQUIP].map(o=>`<option${e.equip===o?" selected":""}>${esc(o)}</option>`).join("");
+  let head=`<div class="pname">${esc(r[1])}</div><div class="meta">SAP ${esc(r[2])} · ${esc(r[3]||"")}`;
+  if(isE){const dl=dleft(r[6]);head+=` · ${esc(r[4]||"")} ${esc(r[5]||"")} <span class="pill ${dl<=30?"soon":""}">expires ${esc(fmtDate(r[6]))}${dl>=0?` (${dl} days)`:" (expired)"}</span>`}
+  head+=`</div>`;
+  const show=s=>e.status===s?"":"hide";
+  const sub=isE
+   ?`<div class="sub ${show("booked")}" data-for="booked"><label>Booking / training date</label><input type="date" data-f="date" value="${esc(e.date||"")}"></div>
+     <div class="sub ${show("renewed")}" data-for="renewed"><div class="row3"><div><label>New licence expiry date</label><input type="date" data-f="expiry" value="${esc(e.expiry||"")}"></div><div><label>Issued by</label><input data-f="issuer" value="${esc(e.issuer||"")}" placeholder="Training provider"></div><div><label>Licence / certificate no.</label><input data-f="certno" value="${esc(e.certno||"")}"></div></div></div>`
+   :`<div class="sub ${show("has")}" data-for="has"><div class="row3"><div><label>Machine</label><select data-f="equip">${eq}</select></div><div><label>Licence code (e.g. F5A+M)</label><input data-f="code" value="${esc(e.code||"")}"></div><div><label>Expiry date</label><input type="date" data-f="expiry" value="${esc(e.expiry||"")}"></div></div><div class="row2"><div><label>Issued by (training provider)</label><input data-f="issuer" value="${esc(e.issuer||"")}"></div><div><label>Licence / certificate no.</label><input data-f="certno" value="${esc(e.certno||"")}"></div></div><div class="hint">Please email a copy of the licence to jolivier@mycleo.co.za.</div></div>
+     <div class="sub ${show("train")}" data-for="train"><label>Preferred training date (optional)</label><input type="date" data-f="date" value="${esc(e.date||"")}"></div>`;
+  return `<div class="person ${isE?"":"noinfo"}${entryFilled(e)?" filled":""}" data-k="${esc(k)}">${head}
+    <label>What is the situation?</label><select data-f="status">${opts}</select>${sub}
+    <label>Note (optional)</label><input data-f="note" value="${esc(e.note||"")}" placeholder=""></div>`
+}
+function renderLists(){
+  const rows=shifts[cur];const A=rows.filter(r=>r[7]==="e"),B=rows.filter(r=>r[7]==="n");
+  $("tab1").innerHTML=`<b>Licences expiring (${A.length})</b><small>Licence runs out soon – training booked?</small>`;
+  $("tab2").innerHTML=`<b>No licence information (${B.length})</b><small>Operators we have no licence for</small>`;
+  $("list1").innerHTML=A.length?`<p class="hint">These people's licences expire before 5 January 2027. Tell us if refresher training is booked, or if they no longer need a licence.</p>`+A.map(card).join(""):`<p class="hint">No licences are expiring on this shift.</p>`;
+  $("list2").innerHTML=B.length?`<p class="hint">We have no licence on record for these operators. If they hold a valid licence, fill in the details. If they need training, say so.</p>`+B.map(card).join(""):`<p class="hint">Nobody on this shift is missing licence information.</p>`;
+  document.querySelectorAll(".person").forEach(p=>{
+    const k=p.dataset.k;
+    p.querySelectorAll("[data-f]").forEach(inp=>inp.addEventListener("input",()=>{
+      const e=state[k]=state[k]||{};e[inp.dataset.f]=inp.value;save();
+      if(inp.dataset.f==="status"){p.querySelectorAll(".sub").forEach(s=>s.classList.toggle("hide",s.dataset.for!==inp.value))}
+      p.classList.toggle("filled",!!entryFilled(e));updateCount();
+    }));
+  });
+  updateCount();
+}
+function allEntries(){const out=[];DATA.forEach(r=>{const e=state[key(r)];if(entryFilled(e))out.push({r,e})});return out}
+function updateCount(){const n=allEntries().length;$("count").textContent=n?`${n} ${n===1?"person":"people"} filled in (all shifts)`:"Nothing filled in yet";renderSitesKeep()}
+let rs=0;function renderSitesKeep(){clearTimeout(rs);rs=setTimeout(renderSites,150)}
+const LAB={booked:"Refresher training booked/requested",renewed:"Already renewed",noneed:"No longer needs a licence",left:"Left / not on this shift",other:"Other",has:"Has a valid licence (no copy on record)",train:"Needs training - please book"};
+
+function report(){
+  const who=$("who").value.trim(),role=$("role").value.trim(),email=$("email").value.trim();
+  const ent=allEntries();
+  const lines=[`ADFUSION MHE LICENCE UPDATE`,`From: ${who}${role?" ("+role+")":""}${email?" <"+email+">":""}`,`Sent: ${new Date().toLocaleString("en-GB")}`,`People updated: ${ent.length}`,""];
+  const byS={};ent.forEach(x=>{(byS[x.r[0]]=byS[x.r[0]]||[]).push(x)});
+  Object.keys(byS).sort().forEach(s=>{
+    lines.push(`=== ${s} ===`);
+    byS[s].forEach(({r,e})=>{
+      let l=`${r[1]} | SAP ${r[2]} | ${r[7]==="e"?"EXPIRING "+(r[4]||"")+" "+(r[5]||"")+" exp "+r[6]:"NO LICENCE INFO"} => ${LAB[e.status]||"(no status)"}`;
+      const bits=[];if(e.date)bits.push("date "+e.date);if(e.equip)bits.push("machine "+e.equip);if(e.code)bits.push("code "+e.code);if(e.expiry)bits.push("licence expires "+e.expiry);if(e.issuer)bits.push("issued by "+e.issuer);if(e.certno)bits.push("cert no "+e.certno);if(e.note)bits.push("note: "+e.note);
+      lines.push(l+(bits.length?" | "+bits.join(" | "):""));
+    });lines.push("");
+  });
+  const g=$("gnote").value.trim();if(g){lines.push("GENERAL NOTE: "+g,"")}
+  lines.push("DATA: "+JSON.stringify(ent.map(({r,e})=>({shift:r[0],name:r[1],sap:r[2],type:r[7]==="e"?"expiring":"noinfo",...e}))));
+  return {text:lines.join("\n"),who,email,shiftNames:Object.keys(byS),n:ent.length};
+}
+function mailto(rep){return `mailto:${CONFIG.sendTo}?subject=${encodeURIComponent("Adfusion MHE licence update - "+rep.shiftNames.join(", ")+" - "+rep.who)}&body=${encodeURIComponent(rep.text)}`}
+$("send").addEventListener("click",async()=>{
+  const res=$("result");res.innerHTML="";
+  if(!$("who").value.trim()){res.innerHTML=`<div class="msg err">Please fill in your name at the top (step 1).</div>`;$("who").focus();return}
+  const rep=report();
+  if(!rep.n){res.innerHTML=`<div class="msg err">You have not filled in anyone yet. Pick a status for at least one person.</div>`;return}
+  const btn=$("send");btn.disabled=true;btn.textContent="Sending...";
+  try{
+    const r=await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({access_key:CONFIG.web3formsKey,subject:"Adfusion MHE licence update - "+rep.shiftNames.join(", ")+" - "+rep.who,from_name:"Adfusion licence form",name:rep.who,email:rep.email||undefined,message:rep.text})});
+    const j=await r.json();
+    if(!j.success)throw new Error(j.message||"send failed");
+    res.innerHTML=`<div class="msg ok">Thank you ${esc(rep.who)}. Your update for ${rep.n} ${rep.n===1?"person":"people"} was sent to CLEO.</div>`;
+    DATA.forEach(r=>{const k=key(r);if(entryFilled(state[k]))state[k].sent=true});
+  }catch(err){
+    res.innerHTML=`<div class="msg err">Could not send automatically (${esc(err.message)}). Please press the button below to send it by email instead.</div><p><a href="${mailto(rep)}"><button class="ghost" type="button">Send by email instead</button></a></p>`;
+  }
+  btn.disabled=false;btn.textContent="Submit to CLEO";
+});
+renderSites();updateCount();
+if(Object.keys(shifts).length===1){$("sitesbox").classList.add("hide");openShiftQuiet(Object.keys(shifts)[0])}
+function openShiftQuiet(s){cur=s;$("work").classList.remove("hide");$("sendbox").classList.remove("hide");$("workTitle").textContent=s;renderLists();setTab(shifts[s].some(r=>r[7]==="e")||!shifts[s].some(r=>r[7]==="n")?1:2)}
+</script>
+</body>
+</html>
